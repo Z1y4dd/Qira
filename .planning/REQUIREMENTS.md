@@ -153,26 +153,80 @@ Explicitly excluded from v1 and v2. Documented to prevent scope creep.
 
 ## Traceability
 
-Empty until roadmap is created. Populated by `gsd-roadmapper` in the next step.
+Every v1 requirement is mapped to exactly one roadmap phase. Coverage: 55/55.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated after roadmap creation) | | Pending |
+| FOUND-01 | Phase 1 | Pending |
+| FOUND-02 | Phase 1 | Pending |
+| FOUND-03 | Phase 1 | Pending |
+| FOUND-04 | Phase 1 | Pending |
+| FOUND-05 | Phase 1 | Pending |
+| FOUND-06 | Phase 1 | Pending |
+| FOUND-07 | Phase 1 | Pending |
+| FOUND-08 | Phase 1 | Pending |
+| FOUND-09 | Phase 1 | Pending |
+| COMP-LEGAL-01 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-05 | Phase 2 | Pending |
+| AUTH-06 | Phase 2 | Pending |
+| PROF-01 | Phase 2 | Pending |
+| PROF-02 | Phase 2 | Pending |
+| PROF-03 | Phase 2 | Pending |
+| PROF-04 | Phase 2 | Pending |
+| PROF-05 | Phase 2 | Pending |
+| PROF-06 | Phase 2 | Pending |
+| COMP-LEGAL-03 | Phase 2 | Pending |
+| COMP-LEGAL-04 | Phase 2 | Pending |
+| PLAC-01 | Phase 3 | Pending |
+| PLAC-02 | Phase 3 | Pending |
+| PLAC-03 | Phase 3 | Pending |
+| PLAC-04 | Phase 3 | Pending |
+| PLAC-05 | Phase 3 | Pending |
+| PLAC-06 | Phase 3 | Pending |
+| PLAC-07 | Phase 3 | Pending |
+| PLAC-08 | Phase 3 | Pending |
+| LIB-01 | Phase 4 | Pending |
+| LIB-02 | Phase 4 | Pending |
+| LIB-03 | Phase 4 | Pending |
+| LIB-04 | Phase 4 | Pending |
+| LIB-05 | Phase 4 | Pending |
+| LIB-06 | Phase 4 | Pending |
+| COMP-01 | Phase 4 | Pending |
+| COMP-02 | Phase 4 | Pending |
+| COMP-03 | Phase 4 | Pending |
+| COMP-04 | Phase 4 | Pending |
+| COMP-05 | Phase 4 | Pending |
+| COMP-06 | Phase 4 | Pending |
+| COMP-07 | Phase 4 | Pending |
+| COMP-08 | Phase 4 | Pending |
+| POLISH-01 | Phase 4 | Pending |
+| POLISH-02 | Phase 4 | Pending |
+| POLISH-03 | Phase 4 | Pending |
+| POLISH-04 | Phase 4 | Pending |
+| API-01 | Phase 5 | Pending |
+| API-02 | Phase 5 | Pending |
+| API-03 | Phase 5 | Pending |
+| COMP-LEGAL-02 | Phase 5 | Pending |
+| COMP-LEGAL-05 | Phase 5 | Pending |
 
 **Coverage (v1):**
-- FOUND: 9
-- AUTH: 6
-- PROF: 6
-- PLAC: 8
-- LIB: 6
-- COMP: 8
-- POLISH: 4
-- COMP-LEGAL: 5
-- API: 3
+- FOUND: 9 → all Phase 1
+- AUTH: 6 → all Phase 2
+- PROF: 6 → all Phase 2
+- PLAC: 8 → all Phase 3
+- LIB: 6 → all Phase 4
+- COMP: 8 → all Phase 4
+- POLISH: 4 → all Phase 4
+- COMP-LEGAL: 5 → split (01→P1, 03+04→P2, 02+05→P5)
+- API: 3 → all Phase 5
 - **Total v1 requirements: 55**
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 55 ⚠️ (resolved after roadmap)
+- Mapped to phases: 55 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-14*
-*Last updated: 2026-05-14 after initial definition*
+*Last updated: 2026-05-14 after roadmap creation and traceability population*

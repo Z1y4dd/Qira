@@ -1,0 +1,75 @@
+# Project State
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-05-14)
+
+**Core value:** A child reads a passage at their actual level and we can tell whether they understood it.
+**Current focus:** Phase 1 — Foundation
+
+## Current Position
+
+Phase: 1 of 5 (Foundation)
+Plan: 0 of TBD in current phase
+Status: Ready to plan
+Last activity: 2026-05-14 — Roadmap created, requirements traceability populated
+
+Progress: [░░░░░░░░░░] 0%
+
+## Performance Metrics
+
+**Velocity:**
+- Total plans completed: 0
+- Average duration: —
+- Total execution time: —
+
+**By Phase:**
+
+| Phase | Plans | Total | Avg/Plan |
+|-------|-------|-------|----------|
+| - | - | - | - |
+
+**Recent Trend:**
+- Last 5 plans: —
+- Trend: —
+
+*Updated after each plan completion*
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- Init: Vertical-MVP framing per phase (every phase delivers a runnable end-to-end slice, not a horizontal layer)
+- Init: Content authoring runs as a parallel workstream from Phase 1, owned by a contracted Arabic literacy specialist (~one contractor-month)
+- Init: Five-phase roadmap (Foundation → Auth+Profiles → Placement → Reader+Comprehension → API+Compliance) per research/SUMMARY.md dependency-ordered shape
+
+### Pending Todos
+
+[From .planning/todos/pending/ — ideas captured during sessions]
+
+None yet.
+
+### Blockers/Concerns
+
+[Issues that affect future work]
+
+- Content workstream owner (Arabic literacy specialist) not yet contracted — hard dependency for Phase 4 demo and Phase 5 launch gate
+- Final Arabic font lock-in needs designer QA on fully-vocalized fixtures in Phase 1 (Noto Naskh Arabic is recommended; Amiri/Markazi Text are fallbacks if Tashkeel rendering disappoints)
+- Digit convention (Western 0123 vs Eastern ٠١٢٣) — UI-phase decision pending; default Western for diaspora target
+
+## Deferred Items
+
+Items acknowledged and carried forward from previous milestone close:
+
+| Category | Item | Status | Deferred At |
+|----------|------|--------|-------------|
+| *(none)* | | | |
+
+## Session Continuity
+
+Last session: 2026-05-14
+Stopped at: Roadmap created and requirements traceability populated; ready to plan Phase 1
+Resume file: None
