@@ -14,8 +14,8 @@ Qira v1 ships the Arabic-first reading-and-comprehension loop for children ages 
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation** - RTL-first Arabic shell deployed on Vercel with schema, RLS, fonts, ArabicText primitive, and CI gates in place
-- [ ] **Phase 2: Auth & Child Profiles** - Parent can sign up, manage child profiles, and exercise their data-access rights; SSR cookie leak provably impossible
+- [x] **Phase 1: Foundation** - RTL-first Arabic shell deployed on Vercel with schema, RLS, fonts, ArabicText primitive, and CI gates in place
+- [x] **Phase 2: Auth & Child Profiles** - Parent can sign up, manage child profiles, and exercise their data-access rights; SSR cookie leak provably impossible
 - [ ] **Phase 3: Placement Vertical** - New child profile takes deterministic placement assessment and lands at a calibrated level with an always-visible escape hatch
 - [ ] **Phase 4: Reader & Comprehension Loop** - Child reads a leveled Arabic passage with Tashkeel and answers comprehension questions with supportive feedback, server-authoritatively scored
 - [ ] **Phase 5: Mobile-Ready API & Pre-Launch Compliance** - `/api/v1/*` surface plus first-party analytics, written retention policy, and full compliance closeout
@@ -98,8 +98,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 5/6 | In Progress|  |
-| 2. Auth & Child Profiles | 0/6 | Planned    |  |
+| 1. Foundation | 6/6 | Complete   | 2026-05-15 |
+| 2. Auth & Child Profiles | 6/6 | Complete   | 2026-05-15 |
 | 3. Placement Vertical | 0/TBD | Not started | - |
 | 4. Reader & Comprehension Loop | 0/TBD | Not started | - |
 | 5. Mobile-Ready API & Pre-Launch Compliance | 0/TBD | Not started | - |
