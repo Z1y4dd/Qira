@@ -21,12 +21,12 @@ export function nfcString(s: string): string {
  * Use at the boundary of every Drizzle insert/update that accepts Arabic
  * input from the caller.
  */
-export function nfc<T extends Record<string, unknown>>(obj: T, fields: (keyof T)[]): T {
+export function nfc<T extends object>(obj: T, fields: (keyof T)[]): T {
   const out = { ...obj };
   for (const f of fields) {
     const v = out[f];
     if (typeof v === 'string') {
-      out[f] = v.normalize('NFC') as T[keyof T];
+      (out as Record<keyof T, unknown>)[f] = v.normalize('NFC');
     }
   }
   return out;
