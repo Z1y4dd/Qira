@@ -23,6 +23,16 @@ ui_hint: yes
 
 # Phase 1 Foundation — Plan Index
 
+> **Post-execution note (2026-05-15):** After Slices 1 + 2 landed,
+> next-intl was dropped entirely (commits `9bdceff` + `056addc`).
+> The `/ar/` route prefix and `[locale]` segment are gone — every
+> route lives at `/...`. Plans 01-04, 01-05, and 01-06 below were
+> patched in-place to match. References to `next-intl`, `/ar/`,
+> `getTranslations`, `messages/ar.json`, and `src/middleware.ts` in
+> Slice 1 / Slice 2 historical docs are kept as-written but no
+> longer reflect the current code. See `01-01-SUMMARY.md` for the
+> reasoning.
+
 ## Phase summary
 
 Phase 1 lands every expensive-to-retrofit invariant of Qira on `main` in one phase so Phases 2–5 never pay a retrofit cost. The output is a deployable Vercel URL serving a single Arabic landing page rendered through the `<ArabicText>` primitive, backed by a Drizzle-managed Supabase schema with RLS on every table, fronted by a CI pipeline that fails the build on any violation of the eight architectural gates (physical-direction Tailwind, missing RLS, missing `force-dynamic`, `getSession()` use, non-allowlisted SDK host, non-NFC Arabic write, `next/*` import inside the Service Layer, raw Arabic literal outside `<ArabicText>` — the last as a soft warning in Phase 1). The phase is MVP-mode: each of the six slices ships a runnable artifact end-to-end and is sequenced linearly (1 → 2 → 3 → 4 → 5 → 6); the final slice deploys to Vercel and proves all five ROADMAP success criteria simultaneously.

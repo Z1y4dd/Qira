@@ -147,3 +147,33 @@ None. This plan creates no network endpoints, auth paths, file access patterns, 
 ## Self-Check: PASSED
 
 All 19 plan files verified to exist. All 8 commits verified in git log.
+
+## Post-Execution Deviation: next-intl Dropped (2026-05-15)
+
+After plans 01-01 and 01-02 landed, smoke-testing `pnpm dev` exposed that
+`next-intl@3.26` is incompatible with Next.js 16 (the plugin injects
+`experimental.turbo`, which Next 16 rejects, silently breaking the plugin
+transform → runtime error: "Couldn't find next-intl config file").
+
+Fix sequence applied to main:
+- `edcd6c9` upgrade next-intl 3.26 → 4.12
+- `b8281dd` migrate i18n config to v4 API (src/i18n/request.ts)
+- `e22575b` align next.config.ts with Next 16 (typedRoutes top-level)
+- `0a067db` rename middleware.ts → proxy.ts (Next 16 file convention)
+
+After the v4 upgrade worked, the user reviewed the scaffold and elected
+to drop next-intl entirely. PROJECT.md's "No multilingual v1" commitment
+plus phases 2–5 not introducing multilingual meant the `/ar/` route prefix
+was a daily cost paying for optionality that may never get exercised.
+
+Subsequent commits:
+- `9bdceff` drop [locale] segment, hardcode Arabic strings
+- `056addc` remove next-intl, simplify next.config.ts
+
+**Net result:** The five Phase 1 success criteria from ROADMAP.md still
+hold (RTL `<html>`, fonts self-hosted same-origin, force-dynamic on
+authenticated layouts) — only the *route shape* changed: `/ar/...` is
+now `/...`, the `[locale]` segment is gone, `messages/` is gone, and
+the proxy/middleware that did locale routing is gone. Future plans
+(01-05 Playwright tests, 01-06 deploy verification) have been edited
+to match the new convention.
