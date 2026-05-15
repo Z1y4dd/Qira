@@ -1,22 +1,22 @@
-import { notFound } from "next/navigation";
-import { Noto_Naskh_Arabic, Cairo } from "next/font/google";
-import "../globals.css";
+import { Cairo, Noto_Naskh_Arabic } from 'next/font/google';
+import { notFound } from 'next/navigation';
+import '../globals.css';
 
 const naskh = Noto_Naskh_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "500", "700"],
-  variable: "--font-naskh",
-  display: "swap",
+  subsets: ['arabic'],
+  weight: ['400', '500', '700'],
+  variable: '--font-naskh',
+  display: 'swap',
 });
 
 const cairo = Cairo({
-  subsets: ["arabic", "latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-cairo",
-  display: "swap",
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-cairo',
+  display: 'swap',
 });
 
-const SUPPORTED_LOCALES = ["ar"] as const;
+const SUPPORTED_LOCALES = ['ar'] as const;
 type Locale = (typeof SUPPORTED_LOCALES)[number];
 
 export function generateStaticParams() {
@@ -38,11 +38,7 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html
-      lang={locale}
-      dir="rtl"
-      className={`${naskh.variable} ${cairo.variable}`}
-    >
+    <html lang={locale} dir="rtl" className={`${naskh.variable} ${cairo.variable}`}>
       <body className="font-naskh antialiased">{children}</body>
     </html>
   );
