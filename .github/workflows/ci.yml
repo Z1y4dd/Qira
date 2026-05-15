@@ -40,5 +40,7 @@ jobs:
       - name: Vitest invariants + unit tests
         run: pnpm test:run
 
+      - name: Next build (exercises migration manifest reachability)
+        run: pnpm build
+
       # Playwright is added in Slice 5
-      # pnpm build is added in Slice 5 (before Playwright)
