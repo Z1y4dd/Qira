@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Biome (lint + format)
+        run: pnpm lint:ci
+
+      - name: TypeScript typecheck
+        run: pnpm tsc --noEmit
+
+      - name: Lint RTL utilities (bash gate)
+        run: bash scripts/lint-rtl.sh
+
+      - name: Lint force-dynamic (bash gate)
+        run: bash scripts/lint-force-dynamic.sh
+
+      - name: Lint Arabic wrapper (soft warn)
+        run: bash scripts/lint-arabic-wrapper.sh
+
+      - name: Vitest invariants + unit tests
+        run: pnpm test:run
+
+      # Playwright is added in Slice 5
+      # pnpm build is added in Slice 5 (before Playwright)
