@@ -33,7 +33,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A developer can render any Arabic string only through the `<ArabicText>` primitive — every Arabic-rendering route in the app uses it, verified by a Playwright RTL screenshot baseline on desktop + mobile widths in Chromium and WebKit
   4. A developer running the seed script populates Drizzle-managed entities (`parents`, `child_profiles`, `levels`, `texts`, `questions`, `choices`, `attempts`, `attempt_answers`) and any Arabic text written is NFC-normalized server-side before insert
   5. A developer inspecting the deployed shell on every authenticated route layout sees `export const dynamic = 'force-dynamic'` declared (defense-in-depth ahead of Phase 2 auth) and a network-tab audit shows zero third-party SDK requests beyond Supabase and same-origin
-**Plans:** 4/6 plans executed
+**Plans:** 5/6 plans executed
 **UI hint:** yes
 
 ### Phase 2: Auth & Child Profiles
@@ -98,7 +98,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 4/6 | In Progress|  |
+| 1. Foundation | 5/6 | In Progress|  |
 | 2. Auth & Child Profiles | 0/TBD | Not started | - |
 | 3. Placement Vertical | 0/TBD | Not started | - |
 | 4. Reader & Comprehension Loop | 0/TBD | Not started | - |
