@@ -54,7 +54,9 @@ export interface RecordPlacementAnswerResult {
   finalResult: PlacementResult | null;
 }
 
-export function recordPlacementAnswer(input: RecordPlacementAnswerInput): Promise<RecordPlacementAnswerResult> {
+export function recordPlacementAnswer(
+  input: RecordPlacementAnswerInput,
+): Promise<RecordPlacementAnswerResult> {
   RecordPlacementAnswerInput.parse(input);
   throw new Error('placement.recordPlacementAnswer: not implemented until Phase 3');
 }

@@ -16,13 +16,18 @@ EXPECTED='export const dynamic = .force-dynamic.'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Find all (authenticated) layout files under src/app/ or app/
-mapfile -t LAYOUTS < <(find "$REPO_ROOT" \
-  \( -path '*/src/app/*/(authenticated)/*/layout.tsx' \
-     -o -path '*/src/app/*/(authenticated)/layout.tsx' \
-     -o -path '*/app/*/(authenticated)/*/layout.tsx' \
-     -o -path '*/app/*/(authenticated)/layout.tsx' \) \
-  2>/dev/null)
+# Find all (authenticated) layout files under src/app/ or app/.
+# Robust to nesting depth: walks the app roots, finds any directory named
+# '(authenticated)', then collects layout.tsx files inside it.
+LAYOUTS=()
+for ROOT in "$REPO_ROOT/src/app" "$REPO_ROOT/app"; do
+  [[ -d "$ROOT" ]] || continue
+  while IFS= read -r dir; do
+    while IFS= read -r layout; do
+      LAYOUTS+=("$layout")
+    done < <(find "$dir" -type f -name 'layout.tsx' 2>/dev/null)
+  done < <(find "$ROOT" -type d -name '(authenticated)' 2>/dev/null)
+done
 
 if [[ ${#LAYOUTS[@]} -eq 0 ]]; then
   echo "ERROR: No (authenticated) layouts found. Expected at least one under src/app/ or app/."

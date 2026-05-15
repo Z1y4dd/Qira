@@ -1,5 +1,5 @@
-import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
+import { cn } from '@/lib/utils';
 
 type ArabicTextSize = 'reader' | 'ui' | 'caption';
 type ArabicTextAs = 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div';
@@ -44,11 +44,7 @@ export function ArabicText({
   return (
     <Tag
       lang="ar"
-      className={cn(
-        sizeClasses[size],
-        diacritics === 'hide' && diacriticsHideClass,
-        className,
-      )}
+      className={cn(sizeClasses[size], diacritics === 'hide' && diacriticsHideClass, className)}
     >
       <bdi>{children}</bdi>
     </Tag>
