@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+@theme {
+  --font-naskh: "var(--font-naskh)", "Noto Naskh Arabic", "Segoe UI", system-ui, sans-serif;
+  --font-cairo: "var(--font-cairo)", "Cairo", system-ui, sans-serif;
+  --font-sans: var(--font-naskh);
+}
+
+@layer base {
+  html,
+  body {
+    font-family: var(--font-naskh);
+    line-height: 1.8;
+  }
+
+  body {
+    text-align: start;
+    text-rendering: optimizeLegibility;
+  }
+}
