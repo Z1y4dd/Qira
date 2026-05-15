@@ -50,15 +50,27 @@ export default async function ChooseChildPage() {
                     <ArabicText size="ui">اختيار</ArabicText>
                   </Button>
                 </form>
-                <Link
-                  href={{
-                    pathname: '/profiles/[childId]/edit',
-                    query: { childId: child.id },
-                  }}
-                  className="block text-sm text-muted-foreground underline-offset-4 hover:underline"
-                >
-                  <ArabicText size="caption">تعديل</ArabicText>
-                </Link>
+                <div className="flex items-center justify-center gap-3 text-sm">
+                  <Link
+                    href={{
+                      pathname: '/profiles/[childId]/edit',
+                      query: { childId: child.id },
+                    }}
+                    className="text-muted-foreground underline-offset-4 hover:underline"
+                  >
+                    <ArabicText size="caption">تعديل</ArabicText>
+                  </Link>
+                  <span className="text-muted-foreground">·</span>
+                  <Link
+                    href={{
+                      pathname: '/profiles/[childId]/manage',
+                      query: { childId: child.id },
+                    }}
+                    className="text-muted-foreground underline-offset-4 hover:underline"
+                  >
+                    <ArabicText size="caption">إدارة</ArabicText>
+                  </Link>
+                </div>
               </div>
             </Card>
           ))}
