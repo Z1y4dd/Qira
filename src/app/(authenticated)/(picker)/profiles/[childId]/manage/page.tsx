@@ -1,3 +1,4 @@
+import type { Route } from 'next';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
@@ -49,12 +50,7 @@ export default async function ManageProfilePage({
                 العمر <bdi dir="ltr">{profile.age}</bdi> · {GRADE_LABELS[profile.gradeBand]}
               </ArabicText>
             </div>
-            <Link
-              href={{
-                pathname: '/profiles/[childId]/edit',
-                query: { childId: profile.id },
-              }}
-            >
+            <Link href={`/profiles/${profile.id}/edit` as Route}>
               <Button variant="outline" size="sm">
                 <ArabicText size="ui">تعديل</ArabicText>
               </Button>
@@ -69,17 +65,11 @@ export default async function ManageProfilePage({
           <ArabicText size="caption" className="block text-muted-foreground">
             صدّر كلّ بيانات هذا الطفل (سجلّ القراءة، الإجابات، المستوى) كملفّ JSON.
           </ArabicText>
-          <Link
-            href={{
-              pathname: '/api/profiles/[childId]/export',
-              query: { childId: profile.id },
-            }}
-            prefetch={false}
-          >
+          <a href={`/api/profiles/${profile.id}/export`} download>
             <Button variant="outline" size="lg" className="w-full">
               <ArabicText size="ui">تصدير بيانات الطفل</ArabicText>
             </Button>
-          </Link>
+          </a>
         </Card>
 
         <Card className="p-6 space-y-3 border-destructive/50">

@@ -1,4 +1,5 @@
 import { Plus } from 'lucide-react';
+import type { Route } from 'next';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { signOutAction } from '@/app/(auth)/sign-in/actions';
@@ -52,20 +53,14 @@ export default async function ChooseChildPage() {
                 </form>
                 <div className="flex items-center justify-center gap-3 text-sm">
                   <Link
-                    href={{
-                      pathname: '/profiles/[childId]/edit',
-                      query: { childId: child.id },
-                    }}
+                    href={`/profiles/${child.id}/edit` as Route}
                     className="text-muted-foreground underline-offset-4 hover:underline"
                   >
                     <ArabicText size="caption">تعديل</ArabicText>
                   </Link>
                   <span className="text-muted-foreground">·</span>
                   <Link
-                    href={{
-                      pathname: '/profiles/[childId]/manage',
-                      query: { childId: child.id },
-                    }}
+                    href={`/profiles/${child.id}/manage` as Route}
                     className="text-muted-foreground underline-offset-4 hover:underline"
                   >
                     <ArabicText size="caption">إدارة</ArabicText>
