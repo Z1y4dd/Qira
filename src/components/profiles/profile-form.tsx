@@ -39,11 +39,14 @@ export function ProfileForm({
   defaults,
   submitLabelAr,
   pendingLabelAr,
+  childId,
 }: {
   action: ProfileAction;
   defaults?: ProfileFormDefaults;
   submitLabelAr: string;
   pendingLabelAr: string;
+  /** When editing, render a hidden input the Server Action reads to identify the child. */
+  childId?: string;
 }) {
   const [state, formAction, pending] = useActionState<ProfileFormState | undefined, FormData>(
     action,
@@ -52,6 +55,7 @@ export function ProfileForm({
 
   return (
     <form action={formAction} className="space-y-5">
+      {childId && <input type="hidden" name="childId" value={childId} />}
       <div className="space-y-2">
         <Label htmlFor="displayName">
           <ArabicText size="ui">اسم الطفل</ArabicText>

@@ -23,8 +23,6 @@ export default async function EditProfilePage({
     redirect('/choose-child');
   }
 
-  const action = editProfileAction(profile.id);
-
   return (
     <main className="min-h-screen px-4 py-12">
       <div className="mx-auto w-full max-w-md">
@@ -36,7 +34,8 @@ export default async function EditProfilePage({
           </div>
 
           <ProfileForm
-            action={action}
+            action={editProfileAction}
+            childId={profile.id}
             defaults={{
               displayName: profile.displayName,
               age: profile.age,
