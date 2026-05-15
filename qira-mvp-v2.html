@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qira — منصة القراءة العربية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:      #1a7a6e;
+  --teal2:     #2aa898;
+  --teal-pale: #e8f7f5;
+  --gold:      #c8973a;
+  --gold-lt:   #f5c842;
+  --dark:      #12192c;
+  --paper:     #f7f9fb;
+  --white:     #ffffff;
+  --gray:      #6b7280;
+  --gray-lt:   #e5e7eb;
+  --red:       #e53e3e;
+  --green:     #22c55e;
+  --green-dk:  #16a34a;
+  --orange:    #f97316;
+  --radius:    18px;
+  --shadow:    0 4px 24px rgba(18,25,44,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--paper);
+  color: var(--dark);
+  direction: rtl;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+/* ────────── SCREENS ────────── */
+.screen { display: none; min-height: 100dvh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ────────── NAV BAR ────────── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-lt);
+  padding: 0 20px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.logo { font-size: 20px; font-weight: 900; color: var(--teal); display: flex; align-items: center; gap: 6px; }
+.logo-dot { color: var(--gold); }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+.pill { background: var(--teal-pale); color: var(--teal); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+.stars-pill { background: #fef9ec; color: var(--gold); font-size: 13px; font-weight: 800; }
+.back-btn { background: none; border: none; color: var(--gray); font-family: 'Tajawal', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 8px; transition: background .15s; }
+.back-btn:hover { background: var(--gray-lt); }
+
+/* ────────── BUTTONS ────────── */
+.btn { border: none; font-family: 'Tajawal', sans-serif; font-weight: 700; border-radius: 14px; cursor: pointer; transition: all .2s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-lg { font-size: 17px; padding: 15px 28px; width: 100%; }
+.btn-teal { background: var(--teal); color: white; }
+.btn-teal:hover { background: var(--teal2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(26,122,110,0.3); }
+.btn-gold { background: var(--gold); color: white; }
+.btn-gold:hover { background: #d9a84a; transform: translateY(-1px); }
+.btn-outline { background: white; border: 2px solid var(--teal); color: var(--teal); }
+.btn-outline:hover { background: var(--teal-pale); }
+.btn-gray { background: var(--gray-lt); color: var(--gray); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+/* ────────── HOME ────────── */
+#home { background: var(--paper); }
+.home-hero {
+  background: linear-gradient(145deg, var(--teal) 0%, #0e5a52 100%);
+  padding: 36px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.home-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -24px; left: 0; right: 0;
+  height: 48px;
+  background: var(--paper);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.hero-emoji { font-size: 52px; margin-bottom: 10px; display: block; }
+.hero-title { font-size: 30px; font-weight: 900; color: white; margin-bottom: 6px; }
+.hero-title em { color: var(--gold-lt); font-style: normal; }
+.hero-sub { font-size: 14px; color: rgba(255,255,255,.75); max-width: 380px; margin: 0 auto 24px; line-height: 1.7; }
+.hero-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.hero-actions .btn { padding: 13px 28px; font-size: 15px; width: auto; }
+
+.home-body { padding: 32px 20px 48px; max-width: 760px; margin: 0 auto; width: 100%; }
+.section-label { font-size: 13px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+
+/* Level grid */
+.levels-row { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; }
+.levels-row::-webkit-scrollbar { display: none; }
+.lv-card {
+  flex-shrink: 0;
+  width: 90px;
+  background: white;
+  border: 2px solid var(--gray-lt);
+  border-radius: 16px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .18s;
+  position: relative;
+}
+.lv-card:hover:not(.locked) { border-color: var(--teal2); transform: translateY(-3px); box-shadow: var(--shadow); }
+.lv-card.active-lv { border-color: var(--teal); background: var(--teal-pale); }
+.lv-card.done { border-color: var(--green); background: #f0fdf4; }
+.lv-card.locked { opacity: .35; cursor: default; }
+.lv-num { font-size: 24px; font-weight: 900; color: var(--teal); }
+.lv-card.done .lv-num { color: var(--green-dk); }
+.lv-label { font-size: 10px; color: var(--gray); margin-top: 3px; line-height: 1.3; }
+.lv-badge { position: absolute; top: -7px; right: 50%; transform: translateX(50%); background: var(--gold); color: white; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 8px; white-space: nowrap; }
+
+/* Performance ring */
+.perf-bar { background: white; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 18px; box-shadow: var(--shadow); margin-bottom: 20px; }
+.perf-ring { position: relative; width: 72px; height: 72px; flex-shrink: 0; }
+.perf-ring svg { transform: rotate(-90deg); }
+.perf-ring-label { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.perf-pct { font-size: 16px; font-weight: 900; color: var(--teal); }
+.perf-sub { font-size: 9px; color: var(--gray); }
+.perf-info h3 { font-size: 16px; font-weight: 800; color: var(--dark); margin-bottom: 4px; }
+.perf-info p { font-size: 13px; color: var(--gray); line-height: 1.5; }
+
+/* ────────── STORY CARD (shared) ────────── */
+.story-shell { max-width: 680px; margin: 0 auto; padding: 20px 18px 48px; width: 100%; flex: 1; }
+
+.story-meta-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+.tag { font-size: 11px; font-weight: 700; padding: 4px 11px; border-radius: 20px; }
+.tag-level { background: var(--teal); color: white; }
+.tag-genre { background: var(--teal-pale); color: var(--teal); }
+.tag-story { background: #fef3c7; color: #92400e; }
+
+/* Progress dots */
+.story-progress { display: flex; gap: 6px; align-items: center; margin-bottom: 20px; }
+.sp-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gray-lt); transition: all .3s; }
+.sp-dot.done-dot { background: var(--green); }
+.sp-dot.active-dot { background: var(--teal); transform: scale(1.3); }
+
+/* ────────── PHASE: LISTEN ────────── */
+.listen-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  text-align: center;
+}
+.listen-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+.listen-subtitle { font-size: 13px; color: var(--gray); margin-bottom: 28px; }
+.sentence-display {
+  background: var(--teal-pale);
+  border-radius: 14px;
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1.8;
+  letter-spacing: .5px;
+}
+.listen-btn {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--teal);
+  border: none;
+  cursor: pointer;
+  font-size: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 6px 24px rgba(26,122,110,0.35);
+  transition: all .2s;
+}
+.listen-btn:hover { transform: scale(1.08); }
+.listen-btn.playing { background: var(--orange); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{box-shadow:0 6px 24px rgba(249,115,22,.4)} 50%{box-shadow:0 6px 36px rgba(249,115,22,.7)} }
+.listen-hint { font-size: 13px; color: var(--gray); }
+
+/* ────────── PHASE: READ ALOUD ────────── */
+.read-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+.read-card-title { font-size: 15px; font-weight: 800; color: var(--teal); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+.sentence-words { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 20px; padding: 20px; background: var(--paper); border-radius: 12px; }
+.word-chip {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 10px;
+  background: white;
+  border: 2px solid var(--gray-lt);
+  transition: all .25s;
+  color: var(--dark);
+}
+.word-chip.heard    { border-color: var(--green); background: #f0fdf4; color: var(--green-dk); }
+.word-chip.wrong-w  { border-color: var(--red);   background: #fff5f5; color: var(--red); }
+.word-chip.current  { border-color: var(--teal2); background: var(--teal-pale); animation: wordpulse .8s infinite; }
+@keyframes wordpulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+
+/* Mic button */
+.mic-area { text-align: center; margin-bottom: 16px; }
+.mic-btn {
+  width: 88px; height: 88px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  font-size: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+  margin-bottom: 10px;
+}
+.mic-btn.idle     { background: var(--gray-lt); color: var(--gray); }
+.mic-btn.recording{ background: var(--red); color: white; animation: micpulse 1s infinite; box-shadow: 0 0 0 0 rgba(229,62,62,.5); }
+@keyframes micpulse { 0%{box-shadow:0 0 0 0 rgba(229,62,62,.5)} 70%{box-shadow:0 0 0 16px rgba(229,62,62,0)} 100%{box-shadow:0 0 0 0 rgba(229,62,62,0)} }
+.mic-status { font-size: 13px; color: var(--gray); font-weight: 600; }
+
+/* Accuracy bar */
+.acc-bar-wrap { margin: 14px 0; }
+.acc-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
+.acc-bar-bg { background: var(--gray-lt); height: 10px; border-radius: 5px; overflow: hidden; }
+.acc-bar-fill { height: 10px; border-radius: 5px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.acc-green { background: linear-gradient(90deg, var(--green), #4ade80); }
+.acc-orange { background: linear-gradient(90deg, var(--orange), #fbbf24); }
+.acc-red { background: linear-gradient(90deg, var(--red), #f87171); }
+
+/* Correct pronunciation reveal */
+.correct-pron {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #9a3412;
+  display: none;
+  margin-bottom: 12px;
+}
+.correct-pron strong { font-size: 20px; color: var(--orange); display: block; margin-top: 4px; }
+
+/* ────────── PHASE: COMPREHENSION ────────── */
+.comp-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.comp-q { font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 18px; line-height: 1.6; }
+.comp-opts { display: flex; flex-direction: column; gap: 10px; }
+.comp-opt {
+  background: var(--paper);
+  border: 2px solid var(--gray-lt);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 15px;
+  font-family: 'Tajawal', sans-serif;
+  text-align: right;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--dark);
+  font-weight: 500;
+}
+.comp-opt:hover:not([disabled]) { border-color: var(--teal2); background: var(--teal-pale); }
+.comp-opt.opt-correct { border-color: var(--green); background: #f0fdf4; color: var(--green-dk); font-weight: 700; }
+.comp-opt.opt-wrong   { border-color: var(--red);   background: #fff5f5; color: var(--red); }
+
+/* YesNo */
+.yesno-row { display: flex; gap: 14px; }
+.yesno-btn {
+  flex: 1; padding: 18px; border: 2px solid var(--gray-lt); border-radius: 14px;
+  font-size: 20px; font-weight: 800; font-family: 'Tajawal', sans-serif;
+  cursor: pointer; transition: all .15s; background: var(--paper);
+}
+.yesno-btn.yes:hover { border-color: var(--green); background: #f0fdf4; }
+.yesno-btn.no:hover  { border-color: var(--red);   background: #fff5f5; }
+.yesno-btn.opt-correct { border-color: var(--green); background: #f0fdf4; color: var(--green-dk); }
+.yesno-btn.opt-wrong   { border-color: var(--red);   background: #fff5f5; color: var(--red); }
+
+/* Fill blank */
+.blank-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--gray-lt);
+  border-radius: 12px;
+  font-size: 18px;
+  font-family: 'Tajawal', sans-serif;
+  text-align: right;
+  color: var(--dark);
+  margin-bottom: 10px;
+  direction: rtl;
+  transition: border .15s;
+}
+.blank-input:focus { outline: none; border-color: var(--teal2); }
+.blank-input.correct-input { border-color: var(--green); background: #f0fdf4; }
+.blank-input.wrong-input   { border-color: var(--red);   background: #fff5f5; }
+
+/* Feedback strip */
+.feedback-strip { border-radius: 10px; padding: 12px 16px; font-size: 13px; font-weight: 700; display: none; margin-bottom: 12px; }
+.fb-correct { background: #f0fdf4; color: var(--green-dk); border: 1px solid #bbf7d0; }
+.fb-wrong   { background: #fff5f5; color: #991b1b;        border: 1px solid #fecaca; }
+
+/* ────────── PHASE: LEVEL RESULT ────────── */
+.level-result {
+  max-width: 500px; margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.lr-icon { font-size: 80px; margin-bottom: 16px; }
+.lr-title { font-size: 26px; font-weight: 900; color: var(--teal); margin-bottom: 8px; }
+.lr-sub { font-size: 15px; color: var(--gray); line-height: 1.7; margin-bottom: 28px; }
+.lr-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 28px; width: 100%; }
+.lr-stat { background: white; border-radius: 14px; padding: 16px 10px; text-align: center; box-shadow: var(--shadow); }
+.lr-stat-val { font-size: 22px; font-weight: 900; color: var(--teal); }
+.lr-stat-lbl { font-size: 11px; color: var(--gray); margin-top: 3px; }
+
+/* ────────── AI DECISION BANNER ────────── */
+.ai-banner {
+  background: linear-gradient(135deg, var(--teal), #0e5a52);
+  border-radius: 14px;
+  padding: 20px;
+  color: white;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.ai-icon { font-size: 28px; flex-shrink: 0; }
+.ai-text h4 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.ai-text p  { font-size: 13px; opacity: .85; line-height: 1.6; }
+
+/* ────────── MISC ────────── */
+.gap-12 { display: flex; flex-direction: column; gap: 12px; }
+.mt-16 { margin-top: 16px; }
+.wave { display: flex; gap: 3px; align-items: flex-end; height: 24px; }
+.wave span { width: 4px; border-radius: 2px; background: var(--gold); animation: wave 1s ease-in-out infinite; }
+.wave span:nth-child(2){ animation-delay:.15s; }
+.wave span:nth-child(3){ animation-delay:.3s; }
+.wave span:nth-child(4){ animation-delay:.45s; }
+@keyframes wave { 0%,100%{height:4px} 50%{height:20px} }
+
+@media(max-width:480px){
+  .sentence-display { font-size:20px; }
+  .word-chip { font-size:18px; }
+  .lr-stats { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HOME ═══════════════════ -->
+<div id="home" class="screen active">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span class="logo-dot">.</span></div>
+    <div class="topbar-right">
+      <span class="pill stars-pill" id="homeStars">⭐ 0</span>
+      <span class="pill" id="homeLevelPill">المستوى 1</span>
+    </div>
+  </div>
+
+  <div class="home-hero">
+    <span class="hero-emoji">📖</span>
+    <h1 class="hero-title">تعلّم القراءة<br><em>بثقة</em> وبالعربية</h1>
+    <p class="hero-sub">استمع، ثم اقرأ بصوتك، ثم أجب — وتقدّم حسب أدائك الحقيقي</p>
+    <div class="hero-actions">
+      <button class="btn btn-gold" onclick="startStory()">🚀 ابدأ القراءة</button>
+      <button class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,.5)" onclick="showDashboard()">📊 نتائجي</button>
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="section-label">مستويات القراءة</div>
+    <div class="levels-row" id="levelsRow"></div>
+
+    <div style="margin-top:28px">
+      <div class="section-label">أدائي الحالي</div>
+      <div class="perf-bar" id="perfBar">
+        <div class="perf-ring">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="28" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+            <circle id="perfArc" cx="36" cy="36" r="28" fill="none" stroke="#1a7a6e" stroke-width="8"
+              stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round"/>
+          </svg>
+          <div class="perf-ring-label">
+            <span class="perf-pct" id="perfPct">0%</span>
+            <span class="perf-sub">أداء</span>
+          </div>
+        </div>
+        <div class="perf-info">
+          <h3 id="perfTitle">ابدأ رحلتك!</h3>
+          <p id="perfDesc">اقرأ أول قصة وسنحسب مستواك تلقائياً بناءً على نطقك وفهمك.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ STORY SCREEN ═══════════════════ -->
+<div id="storyScreen" class="screen">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span class="logo-dot">.</span></div>
+    <button class="back-btn" onclick="goHome()">← رجوع</button>
+  </div>
+  <div class="story-shell" id="storyShell"></div>
+</div>
+
+<!-- ═══════════════════ RESULT SCREEN ═══════════════════ -->
+<div id="resultScreen" class="screen">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span class="logo-dot">.</span></div>
+  </div>
+  <div class="level-result" id="resultContent"></div>
+</div>
+
+<!-- ═══════════════════ DASHBOARD ═══════════════════ -->
+<div id="dashScreen" class="screen">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span class="logo-dot">.</span></div>
+    <button class="back-btn" onclick="goHome()">← رجوع</button>
+  </div>
+  <div class="story-shell" id="dashContent"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const LEVELS = [
+  {
+    id: 1, label: 'كلمات وحروف',
+    stories: [
+      {
+        id: 's1_1', emoji: '🐱', title: 'القطة الصغيرة',
+        sentences: [
+          { text: 'هذه قطة.', words: ['هذه','قطة.'] },
+          { text: 'القطة صغيرة.', words: ['القطة','صغيرة.'] },
+          { text: 'القطة بيضاء.', words: ['القطة','بيضاء.'] },
+        ],
+        questions: [
+          { type: 'yesno',  q: 'هل القطة صغيرة؟', answer: 'نعم' },
+          { type: 'choice', q: 'ما لون القطة؟', opts: ['سوداء','بيضاء','صفراء'], answer: 'بيضاء' },
+        ]
+      },
+      {
+        id: 's1_2', emoji: '🍎', title: 'التفاحة الحمراء',
+        sentences: [
+          { text: 'هذه تفاحة.', words: ['هذه','تفاحة.'] },
+          { text: 'التفاحة حمراء.', words: ['التفاحة','حمراء.'] },
+          { text: 'التفاحة لذيذة.', words: ['التفاحة','لذيذة.'] },
+        ],
+        questions: [
+          { type: 'yesno',  q: 'هل التفاحة زرقاء؟', answer: 'لا' },
+          { type: 'blank',  q: 'التفاحة _____.', answer: 'حمراء', hint: 'فكّر في لونها' },
+        ]
+      },
+      {
+        id: 's1_3', emoji: '☀️', title: 'الشمس المضيئة',
+        sentences: [
+          { text: 'هذه الشمس.', words: ['هذه','الشمس.'] },
+          { text: 'الشمس مضيئة.', words: ['الشمس','مضيئة.'] },
+          { text: 'الشمس دافئة.', words: ['الشمس','دافئة.'] },
+        ],
+        questions: [
+          { type: 'yesno',  q: 'هل الشمس مضيئة؟', answer: 'نعم' },
+          { type: 'choice', q: 'كيف الشمس؟', opts: ['باردة','دافئة','بعيدة'], answer: 'دافئة' },
+        ]
+      },
+    ]
+  },
+  {
+    id: 2, label: 'جمل بسيطة',
+    stories: [
+      {
+        id: 's2_1', emoji: '🐶', title: 'كلبي الوفي',
+        sentences: [
+          { text: 'عندي كلب صغير.', words: ['عندي','كلب','صغير.'] },
+          { text: 'اسمه بسبس.', words: ['اسمه','بسبس.'] },
+          { text: 'بسبس يحب اللعب.', words: ['بسبس','يحب','اللعب.'] },
+          { text: 'أنا أحب بسبس.', words: ['أنا','أحب','بسبس.'] },
+        ],
+        questions: [
+          { type: 'choice', q: 'ما اسم الكلب؟', opts: ['طوطو','بسبس','بوبو'], answer: 'بسبس' },
+          { type: 'yesno',  q: 'هل بسبس يحب اللعب؟', answer: 'نعم' },
+          { type: 'blank',  q: 'بسبس يحب _____.', answer: 'اللعب', hint: 'ماذا يفعل بسبس؟' },
+        ]
+      },
+      {
+        id: 's2_2', emoji: '🌳', title: 'الشجرة الكبيرة',
+        sentences: [
+          { text: 'في الحديقة شجرة كبيرة.', words: ['في','الحديقة','شجرة','كبيرة.'] },
+          { text: 'الشجرة خضراء وجميلة.', words: ['الشجرة','خضراء','وجميلة.'] },
+          { text: 'أجلس تحت الشجرة.', words: ['أجلس','تحت','الشجرة.'] },
+          { text: 'الظل بارد ومريح.', words: ['الظل','بارد','ومريح.'] },
+        ],
+        questions: [
+          { type: 'choice', q: 'أين الشجرة؟', opts: ['في المنزل','في الحديقة','في المدرسة'], answer: 'في الحديقة' },
+          { type: 'yesno',  q: 'هل الظل دافئ؟', answer: 'لا' },
+        ]
+      },
+    ]
+  },
+  {
+    id: 3, label: 'قصص قصيرة',
+    stories: [
+      {
+        id: 's3_1', emoji: '🦁', title: 'الأسد والفأر',
+        sentences: [
+          { text: 'كان هناك أسد كبير في الغابة.', words: ['كان','هناك','أسد','كبير','في','الغابة.'] },
+          { text: 'جاء فأر صغير بالقرب منه.', words: ['جاء','فأر','صغير','بالقرب','منه.'] },
+          { text: 'أمسك الأسد الفأر بقوة.', words: ['أمسك','الأسد','الفأر','بقوة.'] },
+          { text: 'قال الفأر: سأساعدك يوماً ما.', words: ['قال','الفأر:','سأساعدك','يوماً','ما.'] },
+          { text: 'أطلق الأسد سراح الفأر.', words: ['أطلق','الأسد','سراح','الفأر.'] },
+        ],
+        questions: [
+          { type: 'choice', q: 'أين كان الأسد؟', opts: ['في البيت','في الغابة','في البحر'], answer: 'في الغابة' },
+          { type: 'yesno',  q: 'هل أطلق الأسد سراح الفأر؟', answer: 'نعم' },
+          { type: 'blank',  q: 'قال الفأر: _____ يوماً ما.', answer: 'سأساعدك', hint: 'ماذا وعد الفأر؟' },
+        ]
+      },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const S = {
+  currentLevelIdx: 0,
+  currentStoryIdx: 0,
+  currentSentIdx:  0,
+  phase: 'listen',          // listen | read | comprehension
+  sentenceScores: [],       // accuracy per sentence
+  compScores: [],           // correct per question
+  allStoryResults: [],      // history for AI decision
+  totalStars: 0,
+  isPlaying: false,
+  isRecording: false,
+  recognition: null,
+  speechSynth: window.speechSynthesis,
+  tempTranscript: '',
+};
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function goHome() {
+  show('home');
+  buildLevelsRow();
+  updatePerfBar();
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function showDashboard() {
+  buildDashboard();
+  show('dashScreen');
+}
+
+// ═══════════════════════════════════════════════
+//  LEVELS ROW
+// ═══════════════════════════════════════════════
+function buildLevelsRow() {
+  const row = document.getElementById('levelsRow');
+  row.innerHTML = '';
+  LEVELS.forEach((lv, i) => {
+    const el = document.createElement('div');
+    const isDone = i < S.currentLevelIdx;
+    const isCurrent = i === S.currentLevelIdx;
+    const isLocked = i > S.currentLevelIdx;
+    el.className = 'lv-card' + (isDone?' done':'') + (isCurrent?' active-lv':'') + (isLocked?' locked':'');
+    el.innerHTML = `
+      ${isCurrent ? '<span class="lv-badge">أنت هنا</span>' : ''}
+      <div class="lv-num">${isDone ? '✓' : lv.id}</div>
+      <div class="lv-label">${lv.label}</div>
+    `;
+    if (!isLocked) el.onclick = () => { S.currentLevelIdx = i; startStory(); };
+    row.appendChild(el);
+  });
+  // locked placeholders
+  for(let i = LEVELS.length; i < 8; i++) {
+    const el = document.createElement('div');
+    el.className = 'lv-card locked';
+    el.innerHTML = `<div class="lv-num">${i+1}</div><div class="lv-label">قريباً</div>`;
+    row.appendChild(el);
+  }
+  // update pills
+  document.getElementById('homeLevelPill').textContent = 'المستوى ' + LEVELS[S.currentLevelIdx].id;
+  document.getElementById('homeStars').textContent = '⭐ ' + S.totalStars;
+}
+
+// ═══════════════════════════════════════════════
+//  PERF BAR
+// ═══════════════════════════════════════════════
+function updatePerfBar() {
+  if (!S.allStoryResults.length) return;
+  const recent = S.allStoryResults.slice(-3);
+  const avgPron = recent.reduce((a,r) => a + r.pronScore, 0) / recent.length;
+  const avgComp = recent.reduce((a,r) => a + r.compScore, 0) / recent.length;
+  const overall = Math.round((avgPron * .5 + avgComp * .5));
+  const arc = document.getElementById('perfArc');
+  const circum = 175.9;
+  arc.style.strokeDashoffset = circum - (circum * overall / 100);
+  document.getElementById('perfPct').textContent = overall + '%';
+  document.getElementById('perfTitle').textContent = overall >= 75 ? 'أداء ممتاز! 🌟' : overall >= 50 ? 'تقدم جيد 👍' : 'استمر في التدريب 💪';
+  document.getElementById('perfDesc').textContent = `نطق: ${Math.round(avgPron)}% · فهم: ${Math.round(avgComp)}%`;
+}
+
+// ═══════════════════════════════════════════════
+//  STORY FLOW ENTRY
+// ═══════════════════════════════════════════════
+function startStory() {
+  const lv = LEVELS[S.currentLevelIdx];
+  if (S.currentStoryIdx >= lv.stories.length) S.currentStoryIdx = 0;
+  S.currentSentIdx = 0;
+  S.phase = 'listen';
+  S.sentenceScores = [];
+  S.compScores = [];
+  show('storyScreen');
+  renderPhase();
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER PHASE DISPATCHER
+// ═══════════════════════════════════════════════
+function renderPhase() {
+  if (S.phase === 'listen')        renderListen();
+  else if (S.phase === 'read')     renderRead();
+  else if (S.phase === 'comprehension') renderComp(0);
+}
+
+function getStory() { return LEVELS[S.currentLevelIdx].stories[S.currentStoryIdx]; }
+function getSent()  { return getStory().sentences[S.currentSentIdx]; }
+function totalSents(){ return getStory().sentences.length; }
+
+// ─── PROGRESS DOTS ───
+function progressDots(phase) {
+  const story = getStory();
+  const n = story.sentences.length;
+  const dots = Array.from({length: n}, (_,i) => {
+    const cls = i < S.currentSentIdx ? 'sp-dot done-dot' : i === S.currentSentIdx ? 'sp-dot active-dot' : 'sp-dot';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+  return `
+    <div class="story-meta-row">
+      <span class="tag tag-level">المستوى ${LEVELS[S.currentLevelIdx].id}</span>
+      <span class="tag tag-genre">${phase}</span>
+      <span class="tag tag-story">${story.emoji} ${story.title}</span>
+    </div>
+    <div class="story-progress">${dots}</div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+//  PHASE 1: LISTEN
+// ═══════════════════════════════════════════════
+function renderListen() {
+  const sent = getSent();
+  document.getElementById('storyShell').innerHTML = `
+    ${progressDots('استماع')}
+    <div class="listen-card">
+      <div class="listen-title">👂 استمع أولاً</div>
+      <div class="listen-subtitle">اضغط على الزر واستمع للجملة بعناية</div>
+      <div class="sentence-display" id="sentDisplay">${sent.text}</div>
+      <button class="listen-btn" id="listenBtn" onclick="playTTS()">🔊</button>
+      <div class="listen-hint" id="listenHint">اضغط للاستماع</div>
+    </div>
+    <div class="gap-12 mt-16">
+      <button class="btn btn-teal btn-lg" id="listenNextBtn" onclick="goToRead()" disabled>
+        🎤 جاهز — سأقرأ بصوتي
+      </button>
+    </div>
+  `;
+}
+
+function playTTS() {
+  const sent = getSent();
+  if (S.speechSynth.speaking) S.speechSynth.cancel();
+  const utt = new SpeechSynthesisUtterance(sent.text);
+  utt.lang = 'ar-SA';
+  utt.rate = 0.8;
+  const btn = document.getElementById('listenBtn');
+  const hint = document.getElementById('listenHint');
+  btn.classList.add('playing');
+  btn.textContent = '🔊';
+  hint.innerHTML = '<div class="wave"><span></span><span></span><span></span><span></span></div>';
+  utt.onend = () => {
+    btn.classList.remove('playing');
+    btn.textContent = '🔊';
+    hint.textContent = 'استمع مرة أخرى أو تابع';
+    document.getElementById('listenNextBtn').disabled = false;
+  };
+  utt.onerror = () => {
+    btn.classList.remove('playing');
+    hint.textContent = '⚠️ صوت غير متاح — يمكنك المتابعة';
+    document.getElementById('listenNextBtn').disabled = false;
+  };
+  S.speechSynth.speak(utt);
+}
+
+function goToRead() {
+  S.phase = 'read';
+  renderRead();
+}
+
+// ═══════════════════════════════════════════════
+//  PHASE 2: READ ALOUD
+// ═══════════════════════════════════════════════
+function renderRead() {
+  const sent = getSent();
+  const wordsHtml = sent.words.map((w,i) =>
+    `<span class="word-chip" id="wc${i}" data-word="${w}">${w}</span>`
+  ).join('');
+
+  document.getElementById('storyShell').innerHTML = `
+    ${progressDots('نطق')}
+    <div class="read-card">
+      <div class="read-card-title">🎤 اقرأ بصوتك</div>
+      <div class="sentence-words" id="wordsRow">${wordsHtml}</div>
+      <div class="correct-pron" id="correctPron">
+        النطق الصحيح:
+        <strong id="correctPronText"></strong>
+      </div>
+      <div class="acc-bar-wrap" id="accWrap" style="display:none">
+        <div class="acc-label">
+          <span>دقة النطق</span>
+          <span id="accPct">0%</span>
+        </div>
+        <div class="acc-bar-bg"><div class="acc-bar-fill" id="accFill" style="width:0%"></div></div>
+      </div>
+      <div class="mic-area">
+        <button class="mic-btn idle" id="micBtn" onclick="toggleMic()">🎙️</button>
+        <div class="mic-status" id="micStatus">اضغط للتسجيل</div>
+      </div>
+    </div>
+    <div class="gap-12">
+      <button class="btn btn-teal btn-lg" id="readNextBtn" onclick="afterRead()" disabled>
+        التالي ←
+      </button>
+    </div>
+  `;
+}
+
+// ─── MIC / SPEECH RECOGNITION ───
+function toggleMic() {
+  if (S.isRecording) stopMic();
+  else startMic();
+}
+
+function startMic() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) { simulateMic(); return; }
+  S.recognition = new SpeechRec();
+  S.recognition.lang = 'ar-SA';
+  S.recognition.continuous = false;
+  S.recognition.interimResults = true;
+  S.isRecording = true;
+  S.tempTranscript = '';
+  const btn = document.getElementById('micBtn');
+  const status = document.getElementById('micStatus');
+  btn.className = 'mic-btn recording';
+  btn.textContent = '⏹';
+  status.textContent = '🔴 جارٍ التسجيل...';
+
+  S.recognition.onresult = (e) => {
+    S.tempTranscript = Array.from(e.results).map(r => r[0].transcript).join(' ');
+  };
+  S.recognition.onend = () => { processTranscript(S.tempTranscript); };
+  S.recognition.onerror = () => { simulateMic(); };
+  S.recognition.start();
+  setTimeout(() => { if (S.isRecording) stopMic(); }, 6000);
+}
+
+function stopMic() {
+  S.isRecording = false;
+  if (S.recognition) { try { S.recognition.stop(); } catch(e){} }
+}
+
+// fallback simulation when mic unavailable
+function simulateMic() {
+  S.isRecording = false;
+  const btn = document.getElementById('micBtn');
+  const status = document.getElementById('micStatus');
+  btn.className = 'mic-btn idle';
+  btn.textContent = '🎙️';
+  status.textContent = '⚙️ محاكاة النطق...';
+  setTimeout(() => {
+    const sent = getSent();
+    const acc = 60 + Math.floor(Math.random() * 40); // 60–99%
+    processAccuracy(acc, sent.text);
+  }, 1200);
+}
+
+function processTranscript(transcript) {
+  const sent = getSent();
+  const acc = computeAccuracy(transcript, sent.text);
+  processAccuracy(acc, sent.text);
+}
+
+function computeAccuracy(heard, expected) {
+  if (!heard) return 0;
+  const heardWords    = heard.trim().split(/\s+/).map(clean);
+  const expectedWords = expected.trim().split(/\s+/).map(clean);
+  let matches = 0;
+  expectedWords.forEach(w => { if (heardWords.includes(w)) matches++; });
+  return Math.round((matches / expectedWords.length) * 100);
+}
+
+function clean(w) { return w.replace(/[.,،؟!:]/g,'').trim(); }
+
+function processAccuracy(acc, sentText) {
+  S.sentenceScores.push(acc);
+  const btn  = document.getElementById('micBtn');
+  const status = document.getElementById('micStatus');
+  btn.className = 'mic-btn idle';
+  btn.textContent = '🎙️';
+  status.textContent = acc >= 70 ? '✅ ممتاز!' : '⚠️ حاول مرة أخرى';
+
+  // color word chips
+  const sent = getSent();
+  sent.words.forEach((_,i) => {
+    const chip = document.getElementById('wc' + i);
+    if (!chip) return;
+    chip.classList.add(Math.random() < acc/100 ? 'heard' : 'wrong-w');
+  });
+
+  // accuracy bar
+  const wrap = document.getElementById('accWrap');
+  wrap.style.display = 'block';
+  const fill = document.getElementById('accFill');
+  const pct  = document.getElementById('accPct');
+  fill.style.width = acc + '%';
+  fill.className = 'acc-bar-fill ' + (acc >= 70 ? 'acc-green' : acc >= 40 ? 'acc-orange' : 'acc-red');
+  pct.textContent = acc + '%';
+
+  // if below 70% → show correct pronunciation
+  if (acc < 70) {
+    const cp = document.getElementById('correctPron');
+    document.getElementById('correctPronText').textContent = sentText;
+    cp.style.display = 'block';
+  }
+
+  document.getElementById('readNextBtn').disabled = false;
+}
+
+function afterRead() {
+  S.currentSentIdx++;
+  if (S.currentSentIdx < totalSents()) {
+    S.phase = 'listen';
+    renderListen();
+  } else {
+    // all sentences done → comprehension
+    S.phase = 'comprehension';
+    renderComp(0);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  PHASE 3: COMPREHENSION
+// ═══════════════════════════════════════════════
+function renderComp(qIdx) {
+  const story = getStory();
+  const qs = story.questions;
+  if (qIdx >= qs.length) { finishStory(); return; }
+  const q = qs[qIdx];
+  let inner = '';
+
+  if (q.type === 'yesno') {
+    inner = `
+      <div class="comp-q">${q.q}</div>
+      <div class="yesno-row">
+        <button class="yesno-btn yes" onclick="answerComp('نعم','${q.answer}',${qIdx})">✅ نعم</button>
+        <button class="yesno-btn no"  onclick="answerComp('لا','${q.answer}',${qIdx})">❌ لا</button>
+      </div>
+    `;
+  } else if (q.type === 'choice') {
+    const optsHtml = q.opts.map(o =>
+      `<button class="comp-opt" onclick="answerComp('${o}','${q.answer}',${qIdx})">${o}</button>`
+    ).join('');
+    inner = `<div class="comp-q">${q.q}</div><div class="comp-opts">${optsHtml}</div>`;
+  } else if (q.type === 'blank') {
+    inner = `
+      <div class="comp-q">${q.q}</div>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:10px">تلميح: ${q.hint}</p>
+      <input class="blank-input" id="blankInput" placeholder="اكتب هنا..." dir="rtl"/>
+      <button class="btn btn-teal btn-lg" onclick="checkBlank('${q.answer}',${qIdx})">تحقق ✓</button>
+    `;
+  }
+
+  const dots = qs.map((_,i) => `<div class="sp-dot ${i < qIdx ? 'done-dot' : i === qIdx ? 'active-dot' : ''}"></div>`).join('');
+
+  document.getElementById('storyShell').innerHTML = `
+    ${progressDots('فهم')}
+    <div class="comp-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span style="font-size:14px;font-weight:800;color:var(--teal)">سؤال ${qIdx+1} من ${qs.length}</span>
+        <div style="display:flex;gap:6px">${dots}</div>
+      </div>
+      ${inner}
+      <div class="feedback-strip" id="compFeedback"></div>
+    </div>
+  `;
+}
+
+function answerComp(chosen, correct, qIdx) {
+  const isRight = chosen === correct;
+  S.compScores.push(isRight ? 1 : 0);
+  const fb = document.getElementById('compFeedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback-strip ' + (isRight ? 'fb-correct' : 'fb-wrong');
+  fb.textContent = isRight ? '✅ إجابة صحيحة! أحسنت' : `❌ الإجابة الصحيحة: ${correct}`;
+  // disable buttons
+  document.querySelectorAll('.comp-opt,.yesno-btn').forEach(b => {
+    b.disabled = true;
+    if (b.textContent.includes(correct) || b.onclick?.toString().includes(correct)) b.classList.add('opt-correct');
+    else if (b.textContent.includes(chosen) || b.onclick?.toString().includes(chosen)) b.classList.add('opt-wrong');
+  });
+  setTimeout(() => renderComp(qIdx + 1), 1100);
+}
+
+function checkBlank(correct, qIdx) {
+  const val = (document.getElementById('blankInput')?.value || '').trim();
+  const isRight = clean(val) === clean(correct);
+  S.compScores.push(isRight ? 1 : 0);
+  const input = document.getElementById('blankInput');
+  if (input) { input.disabled = true; input.className = 'blank-input ' + (isRight ? 'correct-input' : 'wrong-input'); }
+  const fb = document.getElementById('compFeedback');
+  fb.style.display = 'block';
+  fb.className = 'feedback-strip ' + (isRight ? 'fb-correct' : 'fb-wrong');
+  fb.textContent = isRight ? '✅ صحيح! ممتاز' : `❌ الإجابة: ${correct}`;
+  setTimeout(() => renderComp(qIdx + 1), 1200);
+}
+
+// ═══════════════════════════════════════════════
+//  FINISH STORY + AI DECISION
+// ═══════════════════════════════════════════════
+function finishStory() {
+  const pronScore = S.sentenceScores.length
+    ? Math.round(S.sentenceScores.reduce((a,b)=>a+b,0) / S.sentenceScores.length)
+    : 0;
+  const compScore = S.compScores.length
+    ? Math.round((S.compScores.reduce((a,b)=>a+b,0) / S.compScores.length) * 100)
+    : 0;
+
+  const result = { pronScore, compScore, storyId: getStory().id, levelIdx: S.currentLevelIdx };
+  S.allStoryResults.push(result);
+
+  const stars = Math.round((pronScore + compScore) / 20) * 5;
+  S.totalStars += stars;
+
+  // move to next story in level
+  S.currentStoryIdx++;
+
+  // AI decision
+  const decision = aiDecision();
+
+  showResult(pronScore, compScore, stars, decision);
+}
+
+function aiDecision() {
+  const lv = LEVELS[S.currentLevelIdx];
+  // Get results for this level
+  const lvResults = S.allStoryResults.filter(r => r.levelIdx === S.currentLevelIdx);
+  const n = lvResults.length;
+  if (n < 2) return { action: 'continue', msg: 'أكمل قصة أخرى لأرى أداءك بشكل أوضح 📖' };
+
+  const avgPron = lvResults.reduce((a,r)=>a+r.pronScore,0) / n;
+  const avgComp = lvResults.reduce((a,r)=>a+r.compScore,0) / n;
+  const overall = (avgPron + avgComp) / 2;
+
+  if (overall >= 75 && S.currentLevelIdx < LEVELS.length - 1) {
+    return {
+      action: 'advance',
+      msg: `رائع! نطقك ${Math.round(avgPron)}% وفهمك ${Math.round(avgComp)}%. أنت جاهز للمستوى ${LEVELS[S.currentLevelIdx+1].id}! 🚀`,
+      nextLevel: S.currentLevelIdx + 1
+    };
+  }
+  if (overall >= 55) {
+    return {
+      action: 'continue',
+      msg: `أداء جيد! نطق ${Math.round(avgPron)}% · فهم ${Math.round(avgComp)}%. قصة أخرى ستقوّي مهاراتك 💪`
+    };
+  }
+  return {
+    action: 'repeat',
+    msg: `لا تقلق — هذا المستوى يحتاج مزيداً من التدريب. نطق ${Math.round(avgPron)}% · فهم ${Math.round(avgComp)}%. لنحاول مرة أخرى 🔄`
+  };
+}
+
+function showResult(pronScore, compScore, stars, decision) {
+  const overall = Math.round((pronScore + compScore) / 2);
+  const emoji = overall >= 75 ? '🌟' : overall >= 55 ? '👍' : '💪';
+
+  const aiBannerColor = decision.action === 'advance' ? 'background:linear-gradient(135deg,#16a34a,#15803d)' : decision.action === 'repeat' ? 'background:linear-gradient(135deg,#c2410c,#9a3412)' : '';
+  const aiBanner = `
+    <div class="ai-banner" style="${aiBannerColor}">
+      <div class="ai-icon">${decision.action === 'advance' ? '🎓' : decision.action === 'repeat' ? '🔄' : '📚'}</div>
+      <div class="ai-text">
+        <h4>${decision.action === 'advance' ? 'انتقال للمستوى التالي!' : decision.action === 'repeat' ? 'تدرّب أكثر' : 'استمر!'}</h4>
+        <p>${decision.msg}</p>
+      </div>
+    </div>
+  `;
+
+  const nextBtn = decision.action === 'advance'
+    ? `<button class="btn btn-gold btn-lg" onclick="advanceLevel(${decision.nextLevel})">🎓 انتقل للمستوى ${LEVELS[decision.nextLevel].id}</button>`
+    : `<button class="btn btn-teal btn-lg" onclick="startStory()">📖 ${decision.action === 'repeat' ? 'أعد المحاولة' : 'القصة التالية'}</button>`;
+
+  document.getElementById('resultContent').innerHTML = `
+    <div style="font-size:80px;margin-bottom:16px">${emoji}</div>
+    <div style="font-size:26px;font-weight:900;color:var(--teal);margin-bottom:8px">أحسنت!</div>
+    <div style="font-size:15px;color:var(--gray);margin-bottom:28px;line-height:1.7">
+      اكتسبت <strong style="color:var(--gold)">+${stars} نجمة</strong>
+    </div>
+    <div class="lr-stats">
+      <div class="lr-stat"><div class="lr-stat-val">${pronScore}%</div><div class="lr-stat-lbl">النطق 🎤</div></div>
+      <div class="lr-stat"><div class="lr-stat-val">${compScore}%</div><div class="lr-stat-lbl">الفهم 🧠</div></div>
+      <div class="lr-stat"><div class="lr-stat-val">⭐${stars}</div><div class="lr-stat-lbl">نجوم</div></div>
+    </div>
+    ${aiBanner}
+    <div class="gap-12" style="width:100%">
+      ${nextBtn}
+      <button class="btn btn-outline btn-lg" onclick="goHome()">🏠 الرئيسية</button>
+    </div>
+  `;
+  show('resultScreen');
+}
+
+function advanceLevel(nextIdx) {
+  S.currentLevelIdx = nextIdx;
+  S.currentStoryIdx = 0;
+  startStory();
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function buildDashboard() {
+  const results = S.allStoryResults;
+  const n = results.length;
+  const avgPron = n ? Math.round(results.reduce((a,r)=>a+r.pronScore,0)/n) : 0;
+  const avgComp = n ? Math.round(results.reduce((a,r)=>a+r.compScore,0)/n) : 0;
+
+  const historyHtml = results.length ? results.slice().reverse().map(r => {
+    const story = LEVELS.flatMap(l=>l.stories).find(s=>s.id===r.storyId);
+    return `
+      <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-lt)">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${story?.emoji||'📖'}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700">${story?.title||'قصة'}</div>
+          <div style="font-size:12px;color:var(--gray)">نطق ${r.pronScore}% · فهم ${r.compScore}%</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:${r.pronScore>=70&&r.compScore>=70?'var(--green-dk)':'var(--orange)'}">
+          ${Math.round((r.pronScore+r.compScore)/2)}%
+        </div>
+      </div>
+    `;
+  }).join('') : '<p style="color:var(--gray);font-size:14px;text-align:center;padding:20px">لم تقرأ أي قصة بعد</p>';
+
+  document.getElementById('dashContent').innerHTML = `
+    <div style="background:linear-gradient(135deg,var(--teal),#0e5a52);border-radius:16px;padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:16px">
+      <div style="font-size:40px">👦</div>
+      <div>
+        <div style="font-size:20px;font-weight:900;color:white">طالب Qira</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:3px">المستوى ${LEVELS[S.currentLevelIdx].id} · ⭐ ${S.totalStars} نجمة</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="lr-stat"><div class="lr-stat-val">${LEVELS[S.currentLevelIdx].id}</div><div class="lr-stat-lbl">المستوى</div></div>
+      <div class="lr-stat"><div class="lr-stat-val">${avgPron}%</div><div class="lr-stat-lbl">النطق</div></div>
+      <div class="lr-stat"><div class="lr-stat-val">${avgComp}%</div><div class="lr-stat-lbl">الفهم</div></div>
+    </div>
+    <div style="background:white;border-radius:14px;padding:20px;box-shadow:var(--shadow)">
+      <div style="font-size:15px;font-weight:800;color:var(--teal);margin-bottom:12px">📚 سجل القراءة</div>
+      ${historyHtml}
+    </div>
+    <div class="mt-16">
+      <button class="btn btn-teal btn-lg" onclick="startStory()">📖 ابدأ قصة جديدة</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+buildLevelsRow();
+</script>
+</body>
+</html>

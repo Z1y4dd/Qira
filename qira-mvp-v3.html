@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qira — منصة القراءة العربية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:      #1a7a6e;
+  --teal2:     #2aa898;
+  --teal-pale: #e8f7f5;
+  --gold:      #c8973a;
+  --gold-lt:   #f5c842;
+  --dark:      #12192c;
+  --paper:     #f7f9fb;
+  --white:     #fff;
+  --gray:      #6b7280;
+  --gray-lt:   #e5e7eb;
+  --red:       #e53e3e;
+  --green:     #22c55e;
+  --green-dk:  #16a34a;
+  --orange:    #f97316;
+  --radius:    18px;
+  --shadow:    0 4px 24px rgba(18,25,44,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Tajawal',sans-serif;background:var(--paper);color:var(--dark);direction:rtl;min-height:100%;overflow-x:hidden}
+
+/* SCREENS */
+.screen{display:none;min-height:100dvh;flex-direction:column}
+.screen.active{display:flex}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--gray-lt);padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
+.logo{font-size:22px;font-weight:900;color:var(--teal)}
+.logo span{color:var(--gold)}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.pill{background:var(--teal-pale);color:var(--teal);font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
+.pill-gold{background:#fef9ec;color:var(--gold);font-size:13px;font-weight:800}
+.back-btn{background:none;border:none;color:var(--gray);font-family:'Tajawal',sans-serif;font-size:14px;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:8px;transition:background .15s}
+.back-btn:hover{background:var(--gray-lt)}
+
+/* BUTTONS */
+.btn{border:none;font-family:'Tajawal',sans-serif;font-weight:700;border-radius:14px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-lg{font-size:17px;padding:15px 28px;width:100%}
+.btn-teal{background:var(--teal);color:white}
+.btn-teal:hover{background:var(--teal2);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,122,110,.3)}
+.btn-gold{background:var(--gold);color:white}
+.btn-gold:hover{background:#d9a84a;transform:translateY(-1px)}
+.btn-outline{background:white;border:2px solid var(--teal);color:var(--teal)}
+.btn-outline:hover{background:var(--teal-pale)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+/* HOME */
+.home-hero{background:linear-gradient(145deg,var(--teal) 0%,#0e5a52 100%);padding:36px 24px 52px;text-align:center;position:relative;overflow:hidden}
+.home-hero::after{content:'';position:absolute;bottom:-24px;left:0;right:0;height:48px;background:var(--paper);border-radius:50% 50% 0 0/100% 100% 0 0}
+.hero-emoji{font-size:52px;margin-bottom:10px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.hero-title{font-size:30px;font-weight:900;color:white;margin-bottom:6px}
+.hero-title em{color:var(--gold-lt);font-style:normal}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.75);max-width:380px;margin:0 auto 24px;line-height:1.7}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.hero-actions .btn{padding:13px 28px;font-size:15px;width:auto}
+.home-body{padding:32px 20px 60px;max-width:760px;margin:0 auto;width:100%}
+.sec-label{font-size:12px;font-weight:700;color:var(--gray);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+.levels-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+.levels-row::-webkit-scrollbar{display:none}
+.lv-card{flex-shrink:0;width:90px;background:white;border:2px solid var(--gray-lt);border-radius:16px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .18s;position:relative}
+.lv-card:hover:not(.locked){border-color:var(--teal2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.lv-card.active-lv{border-color:var(--teal);background:var(--teal-pale)}
+.lv-card.done{border-color:var(--green);background:#f0fdf4}
+.lv-card.locked{opacity:.3;cursor:default}
+.lv-num{font-size:24px;font-weight:900;color:var(--teal)}
+.lv-card.done .lv-num{color:var(--green-dk)}
+.lv-label{font-size:10px;color:var(--gray);margin-top:3px;line-height:1.3}
+.lv-badge{position:absolute;top:-7px;right:50%;transform:translateX(50%);background:var(--gold);color:white;font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;white-space:nowrap}
+.perf-card{background:white;border-radius:16px;padding:20px;display:flex;align-items:center;gap:18px;box-shadow:var(--shadow);margin-bottom:20px}
+.perf-ring{position:relative;width:72px;height:72px;flex-shrink:0}
+.perf-ring svg{transform:rotate(-90deg)}
+.perf-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.perf-pct{font-size:16px;font-weight:900;color:var(--teal)}
+.perf-lbl{font-size:9px;color:var(--gray)}
+
+/* STORY SHELL */
+.story-shell{max-width:680px;margin:0 auto;padding:20px 18px 56px;width:100%;flex:1}
+.meta-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
+.tag-lv{background:var(--teal);color:white}
+.tag-ph{background:var(--teal-pale);color:var(--teal)}
+.tag-st{background:#fef3c7;color:#92400e}
+.sp-dots{display:flex;gap:6px;margin-bottom:20px;align-items:center}
+.sp-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-lt);transition:all .3s}
+.sp-dot.done-dot{background:var(--green)}
+.sp-dot.active-dot{background:var(--teal);transform:scale(1.4)}
+
+/* ── LISTEN ── */
+.card{background:white;border-radius:var(--radius);padding:26px 22px;box-shadow:var(--shadow);margin-bottom:20px}
+.card-title{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.card-sub{font-size:13px;color:var(--gray);margin-bottom:22px}
+
+/* ★ DIACRITISED SENTENCE DISPLAY ★ */
+.sent-display{
+  background:var(--teal-pale);
+  border-radius:14px;
+  padding:22px 18px;
+  margin-bottom:22px;
+  font-size:32px;           /* big enough to read تشكيل */
+  font-weight:700;
+  color:var(--dark);
+  line-height:2.2;          /* extra room for harakat above/below */
+  letter-spacing:.5px;
+  text-align:center;
+  font-feature-settings:"calt","liga","kern";
+  -webkit-font-smoothing:antialiased;
+}
+/* individual word spans for TTS highlight */
+.tts-word{display:inline;border-radius:6px;padding:0 4px;transition:background .15s,color .15s}
+.tts-word.lit{background:var(--gold-lt);color:#7c4500}
+
+/* vowel colour‑coding inside sentences */
+.v-fatha  { color:#e53e3e }   /* فَ — a sound — red    */
+.v-kasra  { color:#2563eb }   /* فِ — i sound — blue   */
+.v-damma  { color:#d97706 }   /* فُ — u sound — amber  */
+.v-sukun  { color:#16a34a }   /* فْ — no vowel — green */
+.v-shadda { color:#7c3aed }   /* فّ — doubling — purple */
+
+.listen-btn{width:80px;height:80px;border-radius:50%;background:var(--teal);border:none;cursor:pointer;font-size:34px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 6px 24px rgba(26,122,110,.35);transition:all .2s;color:white}
+.listen-btn:hover{transform:scale(1.07)}
+.listen-btn.playing{background:var(--orange)}
+.sound-wave{display:none;gap:3px;align-items:flex-end;height:28px}
+.listen-btn.playing .sound-wave{display:flex}
+.listen-btn.playing .btn-icon{display:none}
+.sound-wave span{width:5px;border-radius:3px;background:white;animation:sw .9s ease-in-out infinite}
+.sound-wave span:nth-child(2){animation-delay:.12s}
+.sound-wave span:nth-child(3){animation-delay:.24s}
+.sound-wave span:nth-child(4){animation-delay:.36s}
+.sound-wave span:nth-child(5){animation-delay:.48s}
+@keyframes sw{0%,100%{height:5px}50%{height:24px}}
+
+.voice-row{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px}
+.voice-row label{font-size:12px;color:var(--gray);font-weight:600}
+.voice-sel{font-family:'Tajawal',sans-serif;font-size:12px;border:1px solid var(--gray-lt);border-radius:8px;padding:4px 8px;background:white;color:var(--dark);direction:rtl;max-width:200px}
+
+/* ── VOWEL LEGEND ── */
+.vowel-legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.vl-item{display:flex;align-items:center;gap:4px;font-size:13px;font-weight:700;background:white;padding:4px 10px;border-radius:20px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.vl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── READ ALOUD ── */
+.sent-words{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:18px;background:var(--paper);border-radius:12px;margin-bottom:18px}
+.wchip{
+  font-size:26px;        /* bigger so harakat visible */
+  font-weight:700;
+  padding:8px 14px;
+  border-radius:10px;
+  background:white;
+  border:2px solid var(--gray-lt);
+  transition:all .25s;
+  color:var(--dark);
+  line-height:2;         /* room for marks */
+  cursor:default;
+}
+.wchip.heard  {border-color:var(--green);background:#f0fdf4;color:var(--green-dk)}
+.wchip.miss   {border-color:var(--red);background:#fff5f5;color:var(--red)}
+.wchip.current{border-color:var(--teal2);background:var(--teal-pale);animation:wbounce .8s infinite}
+@keyframes wbounce{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+
+.mic-wrap{text-align:center;margin-bottom:16px}
+.mic-btn{width:88px;height:88px;border-radius:50%;border:none;cursor:pointer;font-size:36px;display:inline-flex;align-items:center;justify-content:center;transition:all .2s}
+.mic-btn.idle{background:var(--gray-lt);color:var(--gray)}
+.mic-btn.rec{background:var(--red);color:white;animation:micring 1.2s infinite}
+@keyframes micring{0%{box-shadow:0 0 0 0 rgba(229,62,62,.5)}70%{box-shadow:0 0 0 18px rgba(229,62,62,0)}100%{box-shadow:0 0 0 0 rgba(229,62,62,0)}}
+.mic-lbl{font-size:13px;font-weight:600;color:var(--gray);margin-top:8px}
+
+.acc-wrap{margin:12px 0}
+.acc-head{display:flex;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:5px}
+.acc-bg{background:var(--gray-lt);height:12px;border-radius:6px;overflow:hidden}
+.acc-fill{height:12px;border-radius:6px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.acc-g{background:linear-gradient(90deg,var(--green),#4ade80)}
+.acc-o{background:linear-gradient(90deg,var(--orange),#fbbf24)}
+.acc-r{background:linear-gradient(90deg,var(--red),#f87171)}
+
+.pron-hint{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:14px 16px;display:none;margin-bottom:14px}
+.pron-hint-lbl{font-size:12px;color:var(--orange);font-weight:700;margin-bottom:6px}
+.pron-hint-text{font-size:28px;font-weight:800;color:var(--dark);direction:rtl;line-height:2.2}
+
+/* ── COMPREHENSION ── */
+.comp-q{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:18px;line-height:1.65}
+.comp-opts{display:flex;flex-direction:column;gap:10px}
+.comp-opt{background:var(--paper);border:2px solid var(--gray-lt);border-radius:12px;padding:14px 18px;font-size:15px;font-family:'Tajawal',sans-serif;text-align:right;cursor:pointer;transition:all .15s;color:var(--dark);font-weight:500}
+.comp-opt:hover:not([disabled]){border-color:var(--teal2);background:var(--teal-pale)}
+.comp-opt.right{border-color:var(--green);background:#f0fdf4;color:var(--green-dk);font-weight:700}
+.comp-opt.wrong{border-color:var(--red);background:#fff5f5;color:var(--red)}
+.yesno-row{display:flex;gap:14px}
+.yn-btn{flex:1;padding:18px;border:2px solid var(--gray-lt);border-radius:14px;font-size:20px;font-weight:800;font-family:'Tajawal',sans-serif;cursor:pointer;transition:all .15s;background:var(--paper)}
+.yn-btn:hover:not([disabled]){transform:scale(1.04)}
+.yn-btn.right{border-color:var(--green);background:#f0fdf4;color:var(--green-dk)}
+.yn-btn.wrong{border-color:var(--red);background:#fff5f5;color:var(--red)}
+.blank-inp{width:100%;padding:14px 16px;border:2px solid var(--gray-lt);border-radius:12px;font-size:20px;font-family:'Tajawal',sans-serif;text-align:right;direction:rtl;color:var(--dark);margin-bottom:10px;transition:border .15s;line-height:2}
+.blank-inp:focus{outline:none;border-color:var(--teal2)}
+.blank-inp.right{border-color:var(--green);background:#f0fdf4}
+.blank-inp.wrong{border-color:var(--red);background:#fff5f5}
+.fb{border-radius:10px;padding:12px 16px;font-size:14px;font-weight:700;display:none;margin-bottom:12px}
+.fb.ok{background:#f0fdf4;color:var(--green-dk);border:1px solid #bbf7d0}
+.fb.no{background:#fff5f5;color:#991b1b;border:1px solid #fecaca}
+
+/* ── RESULT ── */
+.result-wrap{max-width:500px;margin:0 auto;padding:40px 20px;text-align:center;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.lr-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;width:100%}
+.lr-stat{background:white;border-radius:14px;padding:16px 10px;text-align:center;box-shadow:var(--shadow)}
+.lr-val{font-size:22px;font-weight:900;color:var(--teal)}
+.lr-lbl{font-size:11px;color:var(--gray);margin-top:3px}
+.ai-banner{border-radius:14px;padding:18px 20px;color:white;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;width:100%;text-align:right}
+.ai-banner h4{font-size:15px;font-weight:800;margin-bottom:4px}
+.ai-banner p{font-size:13px;opacity:.88;line-height:1.6}
+.gap-col{display:flex;flex-direction:column;gap:12px;width:100%}
+
+/* ══════════════════════════════════════
+   CELEBRATION OVERLAY
+══════════════════════════════════════ */
+#overlay{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;pointer-events:none;opacity:0;transition:opacity .25s}
+#overlay.show{opacity:1;pointer-events:all}
+#confettiCanvas{position:absolute;inset:0;pointer-events:none}
+.praise-box{background:white;border-radius:28px;padding:28px 44px;box-shadow:0 24px 64px rgba(0,0,0,.2);text-align:center;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) forwards;transform:scale(0);position:relative;z-index:2}
+@keyframes popIn{0%{transform:scale(0) rotate(-8deg)}100%{transform:scale(1) rotate(0deg)}}
+.praise-main{font-size:56px;font-weight:900;color:var(--teal);line-height:1;margin-bottom:6px}
+.praise-sub{font-size:22px;font-weight:700;color:var(--gold)}
+.praise-stars{font-size:30px;margin-top:8px;letter-spacing:4px}
+.praise-dismiss{margin-top:18px;font-size:13px;color:var(--gray);cursor:pointer}
+
+.particle{position:absolute;font-size:38px;pointer-events:none;animation:fly var(--d,1.5s) ease-out forwards}
+@keyframes fly{0%{transform:translate(0,0) scale(0) rotate(0deg);opacity:1}60%{opacity:1}100%{transform:translate(var(--tx,0px),var(--ty,-200px)) scale(1.1) rotate(var(--r,360deg));opacity:0}}
+
+@media(max-width:480px){
+  .sent-display{font-size:26px}
+  .wchip{font-size:22px}
+  .praise-main{font-size:44px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════ CELEBRATION OVERLAY ══════ -->
+<div id="overlay">
+  <canvas id="confettiCanvas"></canvas>
+  <div class="praise-box" id="praiseBox">
+    <div class="praise-main"  id="praiseMain">يَا بَطَل!</div>
+    <div class="praise-sub"   id="praiseSub">ممتاز جداً</div>
+    <div class="praise-stars" id="praiseStars">⭐⭐⭐</div>
+    <div class="praise-dismiss" onclick="hideOverlay()">اضغط للمتابعة ←</div>
+  </div>
+</div>
+
+<!-- ══════ HOME ══════ -->
+<div id="home" class="screen active">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span>.</span></div>
+    <div class="topbar-right">
+      <span class="pill pill-gold" id="homeStars">⭐ 0</span>
+      <span class="pill" id="homeLvPill">المستوى 1</span>
+    </div>
+  </div>
+  <div class="home-hero">
+    <span class="hero-emoji">📖</span>
+    <h1 class="hero-title">تَعَلَّمِ الْقِرَاءَةَ<br><em>بِثِقَةٍ</em> وَبِالْعَرَبِيَّة</h1>
+    <p class="hero-sub">اِسْتَمِعْ · اِقْرَأْ بِصَوْتِكَ · أَجِبْ — وَتَقَدَّمْ حَسَبَ أَدَائِكَ الْحَقِيقِيّ</p>
+    <div class="hero-actions">
+      <button class="btn btn-gold" onclick="startStory()">🚀 اِبْدَأِ الْقِرَاءَة</button>
+      <button class="btn btn-outline" style="color:white;border-color:rgba(255,255,255,.5)" onclick="showDash()">📊 نَتَائِجِي</button>
+    </div>
+  </div>
+  <div class="home-body">
+    <div class="sec-label">مستويات القراءة</div>
+    <div class="levels-row" id="levelsRow"></div>
+    <div style="margin-top:28px">
+      <div class="sec-label">أدائي الحالي</div>
+      <div class="perf-card">
+        <div class="perf-ring">
+          <svg width="72" height="72"><circle cx="36" cy="36" r="28" fill="none" stroke="#e5e7eb" stroke-width="8"/><circle id="perfArc" cx="36" cy="36" r="28" fill="none" stroke="#1a7a6e" stroke-width="8" stroke-dasharray="175.9" stroke-dashoffset="175.9" stroke-linecap="round"/></svg>
+          <div class="perf-ring-label"><span class="perf-pct" id="perfPct">0%</span><span class="perf-lbl">أداء</span></div>
+        </div>
+        <div>
+          <div style="font-size:16px;font-weight:800;color:var(--dark);margin-bottom:4px" id="perfTitle">اِبْدَأْ رِحْلَتَك!</div>
+          <div style="font-size:13px;color:var(--gray);line-height:1.5" id="perfDesc">اقرأ أول قصة وسنحسب مستواك تلقائياً.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ STORY SCREEN ══════ -->
+<div id="storyScreen" class="screen">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span>.</span></div>
+    <button class="back-btn" onclick="goHome()">← رُجُوع</button>
+  </div>
+  <div class="story-shell" id="storyShell"></div>
+</div>
+
+<!-- ══════ RESULT SCREEN ══════ -->
+<div id="resultScreen" class="screen">
+  <div class="topbar"><div class="logo">📚 Qira<span>.</span></div></div>
+  <div class="result-wrap" id="resultContent"></div>
+</div>
+
+<!-- ══════ DASHBOARD ══════ -->
+<div id="dashScreen" class="screen">
+  <div class="topbar">
+    <div class="logo">📚 Qira<span>.</span></div>
+    <button class="back-btn" onclick="goHome()">← رُجُوع</button>
+  </div>
+  <div class="story-shell" id="dashContent"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CONTENT — fully diacritised (تشكيل كامل)
+// ═══════════════════════════════════════════════
+const LEVELS = [
+  {
+    id:1, label:'كَلِمَات وَجُمَل',
+    stories:[
+      { id:'s1_1', emoji:'🐱', title:'الْقِطَّةُ الصَّغِيرَة',
+        sentences:[
+          { text:'هَذِهِ قِطَّةٌ.',      tts:'هَذِهِ قِطَّةٌ.',    words:['هَذِهِ','قِطَّةٌ.'] },
+          { text:'الْقِطَّةُ صَغِيرَةٌ.', tts:'الْقِطَّةُ صَغِيرَةٌ.', words:['الْقِطَّةُ','صَغِيرَةٌ.'] },
+          { text:'الْقِطَّةُ بَيْضَاءُ.',  tts:'الْقِطَّةُ بَيْضَاءُ.',  words:['الْقِطَّةُ','بَيْضَاءُ.'] },
+        ],
+        questions:[
+          { type:'yesno',  q:'هَلِ الْقِطَّةُ صَغِيرَةٌ؟', answer:'نَعَم' },
+          { type:'choice', q:'مَا لَوْنُ الْقِطَّةِ؟', opts:['سَوْدَاء','بَيْضَاء','صَفْرَاء'], answer:'بَيْضَاء' },
+        ]
+      },
+      { id:'s1_2', emoji:'🍎', title:'التُّفَّاحَةُ الْحَمْرَاء',
+        sentences:[
+          { text:'هَذِهِ تُفَّاحَةٌ.',      tts:'هَذِهِ تُفَّاحَةٌ.',      words:['هَذِهِ','تُفَّاحَةٌ.'] },
+          { text:'التُّفَّاحَةُ حَمْرَاءُ.', tts:'التُّفَّاحَةُ حَمْرَاءُ.', words:['التُّفَّاحَةُ','حَمْرَاءُ.'] },
+          { text:'التُّفَّاحَةُ لَذِيذَةٌ.', tts:'التُّفَّاحَةُ لَذِيذَةٌ.', words:['التُّفَّاحَةُ','لَذِيذَةٌ.'] },
+        ],
+        questions:[
+          { type:'yesno', q:'هَلِ التُّفَّاحَةُ زَرْقَاءُ؟', answer:'لَا' },
+          { type:'blank', q:'التُّفَّاحَةُ _____.', answer:'حَمْرَاء', hint:'مَا لَوْنُهَا؟' },
+        ]
+      },
+      { id:'s1_3', emoji:'☀️', title:'الشَّمْسُ الْمُضِيئَة',
+        sentences:[
+          { text:'هَذِهِ الشَّمْسُ.',    tts:'هَذِهِ الشَّمْسُ.',    words:['هَذِهِ','الشَّمْسُ.'] },
+          { text:'الشَّمْسُ مُضِيئَةٌ.', tts:'الشَّمْسُ مُضِيئَةٌ.', words:['الشَّمْسُ','مُضِيئَةٌ.'] },
+          { text:'الشَّمْسُ دَافِئَةٌ.',  tts:'الشَّمْسُ دَافِئَةٌ.',  words:['الشَّمْسُ','دَافِئَةٌ.'] },
+        ],
+        questions:[
+          { type:'yesno',  q:'هَلِ الشَّمْسُ مُضِيئَةٌ؟', answer:'نَعَم' },
+          { type:'choice', q:'كَيْفَ الشَّمْسُ؟', opts:['بَارِدَة','دَافِئَة','صَغِيرَة'], answer:'دَافِئَة' },
+        ]
+      },
+    ]
+  },
+  {
+    id:2, label:'جُمَل بَسِيطَة',
+    stories:[
+      { id:'s2_1', emoji:'🐶', title:'كَلْبِي الْوَفِيّ',
+        sentences:[
+          { text:'عِنْدِي كَلْبٌ صَغِيرٌ.',   tts:'عِنْدِي كَلْبٌ صَغِيرٌ.',   words:['عِنْدِي','كَلْبٌ','صَغِيرٌ.'] },
+          { text:'اِسْمُهُ بِسْبِس.',           tts:'اِسْمُهُ بِسْبِس.',           words:['اِسْمُهُ','بِسْبِس.'] },
+          { text:'بِسْبِسُ يُحِبُّ اللَّعِب.',  tts:'بِسْبِسُ يُحِبُّ اللَّعِب.',  words:['بِسْبِسُ','يُحِبُّ','اللَّعِب.'] },
+          { text:'أَنَا أُحِبُّ بِسْبِس.',      tts:'أَنَا أُحِبُّ بِسْبِس.',      words:['أَنَا','أُحِبُّ','بِسْبِس.'] },
+        ],
+        questions:[
+          { type:'choice', q:'مَا اسْمُ الْكَلْب؟', opts:['طُوطُو','بِسْبِس','بُوبُو'], answer:'بِسْبِس' },
+          { type:'yesno',  q:'هَلْ بِسْبِسُ يُحِبُّ اللَّعِب؟', answer:'نَعَم' },
+          { type:'blank',  q:'بِسْبِسُ يُحِبُّ _____.', answer:'اللَّعِب', hint:'مَاذَا يَفْعَلُ بِسْبِس؟' },
+        ]
+      },
+      { id:'s2_2', emoji:'🌳', title:'الشَّجَرَةُ الْكَبِيرَة',
+        sentences:[
+          { text:'فِي الْحَدِيقَةِ شَجَرَةٌ كَبِيرَةٌ.', tts:'فِي الْحَدِيقَةِ شَجَرَةٌ كَبِيرَةٌ.', words:['فِي','الْحَدِيقَةِ','شَجَرَةٌ','كَبِيرَةٌ.'] },
+          { text:'الشَّجَرَةُ خَضْرَاءُ وَجَمِيلَة.',    tts:'الشَّجَرَةُ خَضْرَاءُ وَجَمِيلَة.',    words:['الشَّجَرَةُ','خَضْرَاءُ','وَجَمِيلَة.'] },
+          { text:'أَجْلِسُ تَحْتَ الشَّجَرَة.',          tts:'أَجْلِسُ تَحْتَ الشَّجَرَة.',          words:['أَجْلِسُ','تَحْتَ','الشَّجَرَة.'] },
+          { text:'الظِّلُّ بَارِدٌ وَمُرِيح.',           tts:'الظِّلُّ بَارِدٌ وَمُرِيح.',           words:['الظِّلُّ','بَارِدٌ','وَمُرِيح.'] },
+        ],
+        questions:[
+          { type:'choice', q:'أَيْنَ الشَّجَرَة؟', opts:['فِي الْمَنْزِل','فِي الْحَدِيقَة','فِي الْمَدْرَسَة'], answer:'فِي الْحَدِيقَة' },
+          { type:'yesno',  q:'هَلِ الظِّلُّ دَافِئ؟', answer:'لَا' },
+        ]
+      },
+    ]
+  },
+  {
+    id:3, label:'قِصَص قَصِيرَة',
+    stories:[
+      { id:'s3_1', emoji:'🦁', title:'الْأَسَدُ وَالْفَأْر',
+        sentences:[
+          { text:'كَانَ هُنَاكَ أَسَدٌ كَبِيرٌ فِي الْغَابَة.',    tts:'كَانَ هُنَاكَ أَسَدٌ كَبِيرٌ فِي الْغَابَة.',    words:['كَانَ','هُنَاكَ','أَسَدٌ','كَبِيرٌ','فِي','الْغَابَة.'] },
+          { text:'جَاءَ فَأْرٌ صَغِيرٌ بِالْقُرْبِ مِنْه.',         tts:'جَاءَ فَأْرٌ صَغِيرٌ بِالْقُرْبِ مِنْه.',         words:['جَاءَ','فَأْرٌ','صَغِيرٌ','بِالْقُرْبِ','مِنْه.'] },
+          { text:'أَمْسَكَ الْأَسَدُ الْفَأْرَ بِقُوَّة.',           tts:'أَمْسَكَ الْأَسَدُ الْفَأْرَ بِقُوَّة.',           words:['أَمْسَكَ','الْأَسَدُ','الْفَأْرَ','بِقُوَّة.'] },
+          { text:'قَالَ الْفَأْرُ: سَأُسَاعِدُكَ يَوْمًا مَا.',      tts:'قَالَ الْفَأْرُ سَأُسَاعِدُكَ يَوْمًا مَا.',      words:['قَالَ','الْفَأْرُ','سَأُسَاعِدُكَ','يَوْمًا','مَا.'] },
+          { text:'أَطْلَقَ الْأَسَدُ سَرَاحَ الْفَأْر.',             tts:'أَطْلَقَ الْأَسَدُ سَرَاحَ الْفَأْر.',             words:['أَطْلَقَ','الْأَسَدُ','سَرَاحَ','الْفَأْر.'] },
+        ],
+        questions:[
+          { type:'choice', q:'أَيْنَ كَانَ الْأَسَد؟', opts:['فِي الْبَيْت','فِي الْغَابَة','فِي الْبَحْر'], answer:'فِي الْغَابَة' },
+          { type:'yesno',  q:'هَلْ أَطْلَقَ الْأَسَدُ سَرَاحَ الْفَأْر؟', answer:'نَعَم' },
+          { type:'blank',  q:'قَالَ الْفَأْرُ: _____ يَوْمًا مَا.', answer:'سَأُسَاعِدُكَ', hint:'مَاذَا وَعَدَ الْفَأْر؟' },
+        ]
+      },
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const S = {
+  lvIdx:0, stIdx:0, sentIdx:0,
+  phase:'listen',
+  pronScores:[], compScores:[],
+  allResults:[], stars:0,
+  isRec:false, recog:null,
+  voices:[], selVoice:null,
+  heardOnce:false,
+  pendingAction:null,   // after overlay dismissed
+};
+
+// ═══════════════════════════════════════════════
+//  WEB AUDIO — all sounds synthesised
+// ═══════════════════════════════════════════════
+const AC = new (window.AudioContext||window.webkitAudioContext)();
+function tone(freq,type,dur,vol,delay=0){
+  const o=AC.createOscillator(), g=AC.createGain();
+  o.connect(g); g.connect(AC.destination);
+  o.type=type; o.frequency.value=freq;
+  const t=AC.currentTime+delay;
+  g.gain.setValueAtTime(0,t);
+  g.gain.linearRampToValueAtTime(vol,t+0.02);
+  g.gain.linearRampToValueAtTime(0,t+dur);
+  o.start(t); o.stop(t+dur+0.02);
+}
+const SND = {
+  click:   ()=> tone(880,'sine',.06,.12),
+  listen:  ()=>{ tone(660,'sine',.12,.18); tone(880,'sine',.12,.16,.1); },
+  micOn:   ()=> tone(440,'sine',.1,.18),
+  correct: ()=>{ [[523,0],[659,.11],[784,.22],[1047,.36]].forEach(([f,d])=>tone(f,'sine',.22,.28,d)); },
+  wrong:   ()=>{ tone(280,'sawtooth',.22,.22); tone(220,'sawtooth',.22,.18,.12); },
+  goodPron:()=>{ [[523,0],[659,.1],[784,.2]].forEach(([f,d])=>tone(f,'sine',.18,.22,d)); },
+  fanfare: ()=>{ [392,440,494,659,784,988,1047,1319].forEach((f,i)=>tone(f,'triangle',.28,.3,i*.1)); },
+  levelUp: ()=>{ [523,587,659,698,784,880,988,1047,1319].forEach((f,i)=>tone(f,'sine',.3,.33,i*.09)); },
+  coin:    ()=>{ tone(1200,'sine',.08,.25); tone(1600,'sine',.08,.2,.06); },
+};
+
+// ═══════════════════════════════════════════════
+//  TTS — prefer ar-SA (MSA)
+// ═══════════════════════════════════════════════
+function loadVoices(){
+  const all = window.speechSynthesis.getVoices();
+  S.voices = all.filter(v=> v.lang.startsWith('ar')||v.name.toLowerCase().includes('arab'));
+  S.selVoice = S.voices.find(v=>v.lang==='ar-SA')
+    || S.voices.find(v=>v.lang.startsWith('ar'))
+    || null;
+  refreshVoiceSel();
+}
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+function refreshVoiceSel(){
+  const sel = document.getElementById('voiceSel');
+  if(!sel||!S.voices.length) return;
+  sel.innerHTML = S.voices.map((v,i)=>
+    `<option value="${i}"${v===S.selVoice?' selected':''}>${v.name} (${v.lang})</option>`
+  ).join('');
+}
+function onVoiceChange(idx){ S.selVoice = S.voices[idx]||null; }
+
+// speak with per-word boundary highlight
+function speakSentence(ttsText, onDone){
+  if(window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+  const utt = new SpeechSynthesisUtterance(ttsText);
+  utt.lang = S.selVoice?.lang || 'ar-SA';
+  if(S.selVoice) utt.voice = S.selVoice;
+  utt.rate = 0.72;   // slow & clear for learners
+  utt.pitch = 1.05;
+
+  const btn = document.getElementById('listenBtn');
+  const hint= document.getElementById('listenHint');
+
+  utt.onboundary = (e)=>{
+    if(e.name!=='word') return;
+    // highlight the word span that starts at char e.charIndex
+    document.querySelectorAll('.tts-word').forEach(s=>s.classList.remove('lit'));
+    const spans = document.querySelectorAll('.tts-word');
+    // find which span covers charIndex
+    let charCount=0;
+    for(const sp of spans){
+      const len = sp.dataset.raw.length+1;
+      if(charCount<=e.charIndex && e.charIndex<charCount+len){ sp.classList.add('lit'); break; }
+      charCount+=len;
+    }
+  };
+  utt.onstart = ()=>{
+    SND.listen();
+    if(btn){ btn.classList.add('playing'); }
+    if(hint) hint.textContent='يَجْرِي التَّشْغِيل...';
+  };
+  utt.onend = ()=>{
+    if(btn){ btn.classList.remove('playing'); }
+    document.querySelectorAll('.tts-word').forEach(s=>s.classList.remove('lit'));
+    if(hint) hint.textContent='اِسْتَمِعْ مَرَّةً أُخْرَى أَوْ تَابِع';
+    const nb = document.getElementById('nextListenBtn');
+    if(nb) nb.disabled=false;
+    S.heardOnce=true;
+    if(onDone) onDone();
+  };
+  utt.onerror = ()=>{
+    if(btn) btn.classList.remove('playing');
+    if(hint) hint.textContent='⚠️ الصَّوْتُ غَيْرُ مُتَاح — يُمْكِنُكَ الْمُتَابَعَة';
+    const nb = document.getElementById('nextListenBtn');
+    if(nb) nb.disabled=false;
+  };
+  window.speechSynthesis.speak(utt);
+}
+
+// build span html with per-word class for TTS boundary
+function buildWordSpans(text){
+  return text.split(' ').map(w=>
+    `<span class="tts-word" data-raw="${w}">${colorVowels(w)}</span>`
+  ).join(' ');
+}
+
+// colour each harakat character
+function colorVowels(word){
+  const map = {
+    '\u064E':'v-fatha',   // fatha  َ
+    '\u064B':'v-fatha',   // tanwin fath
+    '\u064F':'v-damma',   // damma  ُ
+    '\u064C':'v-damma',   // tanwin damm
+    '\u0650':'v-kasra',   // kasra  ِ
+    '\u064D':'v-kasra',   // tanwin kasr
+    '\u0652':'v-sukun',   // sukun  ْ
+    '\u0651':'v-shadda',  // shadda ّ
+  };
+  // wrap each char: if it's a harakat, wrap in span; else keep plain
+  let out='', i=0;
+  while(i<word.length){
+    const ch = word[i];
+    if(map[ch]){
+      out += `<span class="${map[ch]}">${ch}</span>`;
+    } else {
+      out += ch;
+    }
+    i++;
+  }
+  return out;
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
+function goHome(){ show('home'); buildLevels(); updatePerf(); }
+function showDash(){ buildDash(); show('dashScreen'); }
+
+// ═══════════════════════════════════════════════
+//  LEVELS ROW
+// ═══════════════════════════════════════════════
+function buildLevels(){
+  const row = document.getElementById('levelsRow');
+  row.innerHTML='';
+  LEVELS.forEach((lv,i)=>{
+    const done=i<S.lvIdx, cur=i===S.lvIdx, lock=i>S.lvIdx;
+    const el=document.createElement('div');
+    el.className='lv-card'+(done?' done':'')+(cur?' active-lv':'')+(lock?' locked':'');
+    el.innerHTML=`${cur?'<span class="lv-badge">أَنْتَ هُنَا</span>':''}<div class="lv-num">${done?'✓':lv.id}</div><div class="lv-label">${lv.label}</div>`;
+    if(!lock) el.onclick=()=>{ SND.click(); S.lvIdx=i; startStory(); };
+    row.appendChild(el);
+  });
+  for(let i=LEVELS.length;i<8;i++){
+    const el=document.createElement('div');
+    el.className='lv-card locked';
+    el.innerHTML=`<div class="lv-num">${i+1}</div><div class="lv-label">قَرِيبًا</div>`;
+    row.appendChild(el);
+  }
+  document.getElementById('homeLvPill').textContent='المستوى '+LEVELS[S.lvIdx].id;
+  document.getElementById('homeStars').textContent='⭐ '+S.stars;
+}
+
+function updatePerf(){
+  if(!S.allResults.length) return;
+  const rec=S.allResults.slice(-3);
+  const ap=rec.reduce((a,r)=>a+r.pron,0)/rec.length;
+  const ac=rec.reduce((a,r)=>a+r.comp,0)/rec.length;
+  const ov=Math.round((ap+ac)/2);
+  const arc=document.getElementById('perfArc');
+  arc.style.strokeDashoffset=175.9-(175.9*ov/100);
+  document.getElementById('perfPct').textContent=ov+'%';
+  document.getElementById('perfTitle').textContent=ov>=75?'أَدَاءٌ مُمْتَاز! 🌟':ov>=50?'تَقَدُّمٌ جَيِّد 👍':'اِسْتَمِرَّ فِي التَّدْرِيب 💪';
+  document.getElementById('perfDesc').textContent=`نُطْق: ${Math.round(ap)}% · فَهْم: ${Math.round(ac)}%`;
+}
+
+// ═══════════════════════════════════════════════
+//  STORY FLOW
+// ═══════════════════════════════════════════════
+function story(){ return LEVELS[S.lvIdx].stories[S.stIdx]; }
+function sent(){  return story().sentences[S.sentIdx]; }
+function nSents(){ return story().sentences.length; }
+
+function startStory(){
+  if(S.stIdx >= LEVELS[S.lvIdx].stories.length) S.stIdx=0;
+  S.sentIdx=0; S.phase='listen'; S.pronScores=[]; S.compScores=[]; S.heardOnce=false;
+  show('storyScreen'); renderPhase();
+}
+
+function renderPhase(){
+  if(S.phase==='listen') renderListen();
+  else if(S.phase==='read') renderRead();
+  else renderComp(0);
+}
+
+function dotsHtml(){
+  return Array.from({length:nSents()},(_,i)=>
+    `<div class="sp-dot${i<S.sentIdx?' done-dot':i===S.sentIdx?' active-dot':''}"></div>`
+  ).join('');
+}
+function metaHtml(phase){
+  const lv=LEVELS[S.lvIdx], st=story();
+  return `<div class="meta-row">
+    <span class="tag tag-lv">الْمُسْتَوَى ${lv.id}</span>
+    <span class="tag tag-ph">${phase}</span>
+    <span class="tag tag-st">${st.emoji} ${st.title}</span>
+  </div>
+  <div class="sp-dots">${dotsHtml()}</div>`;
+}
+
+// ─── VOWEL LEGEND ───
+const LEGEND_HTML = `
+  <div class="vowel-legend">
+    <div class="vl-item"><div class="vl-dot" style="background:#e53e3e"></div><span style="color:#e53e3e">فَتْحَة (a)</span></div>
+    <div class="vl-item"><div class="vl-dot" style="background:#2563eb"></div><span style="color:#2563eb">كَسْرَة (i)</span></div>
+    <div class="vl-item"><div class="vl-dot" style="background:#d97706"></div><span style="color:#d97706">ضَمَّة (u)</span></div>
+    <div class="vl-item"><div class="vl-dot" style="background:#16a34a"></div><span style="color:#16a34a">سُكُون</span></div>
+    <div class="vl-item"><div class="vl-dot" style="background:#7c3aed"></div><span style="color:#7c3aed">شَدَّة</span></div>
+  </div>`;
+
+// ── LISTEN PHASE ──
+function renderListen(){
+  S.heardOnce=false;
+  const s=sent();
+  const spanned = buildWordSpans(s.text);
+  document.getElementById('storyShell').innerHTML=`
+    ${metaHtml('اِسْتِمَاع')}
+    ${LEGEND_HTML}
+    <div class="card" style="text-align:center">
+      <div class="card-title">👂 اِسْتَمِعْ أَوَّلاً</div>
+      <div class="card-sub">اضْغَطْ عَلَى الزِّرِّ وَاسْتَمِعْ لِلْجُمْلَةِ بِعِنَايَة</div>
+      <div class="sent-display" id="sentDisplay">${spanned}</div>
+      <button class="listen-btn" id="listenBtn" onclick="doListen()">
+        <span class="btn-icon">🔊</span>
+        <div class="sound-wave"><span></span><span></span><span></span><span></span><span></span></div>
+      </button>
+      <div class="listen-hint" id="listenHint">اضْغَطْ لِلِاسْتِمَاع</div>
+      <div class="voice-row">
+        <label>الصَّوْت:</label>
+        <select class="voice-sel" id="voiceSel" onchange="onVoiceChange(this.value)">
+          <option>جَارٍ التَّحْمِيل...</option>
+        </select>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px">
+      <button class="btn btn-teal btn-lg" id="nextListenBtn" onclick="goToRead()" disabled>
+        🎤 جَاهِز — سَأَقْرَأُ بِصَوْتِي
+      </button>
+    </div>
+  `;
+  refreshVoiceSel();
+  // auto-play first time
+  setTimeout(()=>doListen(), 600);
+}
+
+function doListen(){ speakSentence(sent().tts); }
+function goToRead(){ SND.click(); S.phase='read'; renderRead(); }
+
+// ── READ ALOUD PHASE ──
+function renderRead(){
+  const s=sent();
+  const chips = s.words.map((w,i)=>
+    `<div class="wchip" id="wc${i}">${colorVowels(w)}</div>`
+  ).join('');
+  document.getElementById('storyShell').innerHTML=`
+    ${metaHtml('نُطْق')}
+    ${LEGEND_HTML}
+    <div class="card">
+      <div style="font-size:15px;font-weight:800;color:var(--teal);margin-bottom:14px">🎤 اِقْرَأْ بِصَوْتِك</div>
+      <div class="sent-words" id="wordsRow">${chips}</div>
+      <div class="pron-hint" id="pronHint">
+        <div class="pron-hint-lbl">🔁 النُّطْقُ الصَّحِيح:</div>
+        <div class="pron-hint-text" id="pronHintText"></div>
+      </div>
+      <div class="acc-wrap" id="accWrap" style="display:none">
+        <div class="acc-head"><span>دِقَّةُ النُّطْق</span><span id="accPct">0%</span></div>
+        <div class="acc-bg"><div class="acc-fill" id="accFill" style="width:0%"></div></div>
+      </div>
+      <div class="mic-wrap">
+        <button class="mic-btn idle" id="micBtn" onclick="toggleMic()">🎙️</button>
+        <div class="mic-lbl" id="micLbl">اضْغَطْ لِلتَّسْجِيل</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <button class="btn btn-teal btn-lg" id="readNextBtn" onclick="afterRead()" disabled>
+        اَلتَّالِي ←
+      </button>
+      <button class="btn btn-outline btn-lg" onclick="replayTTS()" style="font-size:14px">
+        🔊 اِسْتَمِعْ مَرَّةً أُخْرَى
+      </button>
+    </div>
+  `;
+}
+
+function replayTTS(){ speakSentence(sent().tts); }
+
+// ── MIC LOGIC ──
+function toggleMic(){ S.isRec ? stopMic() : startMic(); }
+
+function startMic(){
+  AC.resume();
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  SND.micOn();
+  const btn=document.getElementById('micBtn'), lbl=document.getElementById('micLbl');
+  if(!SR){ simulateMic(); return; }
+  S.recog = new SR();
+  S.recog.lang = 'ar-SA';
+  S.recog.continuous=false; S.recog.interimResults=true;
+  S.isRec=true;
+  btn.className='mic-btn rec'; btn.textContent='⏹';
+  lbl.textContent='🔴 جَارٍ التَّسْجِيل...';
+  let transcript='';
+  S.recog.onresult=e=>{ transcript=Array.from(e.results).map(r=>r[0].transcript).join(' '); };
+  S.recog.onend=()=>{ S.isRec=false; processTranscript(transcript); };
+  S.recog.onerror=()=>{ S.isRec=false; simulateMic(); };
+  S.recog.start();
+  setTimeout(()=>{ if(S.isRec) stopMic(); }, 7000);
+}
+
+function stopMic(){ S.isRec=false; try{ S.recog&&S.recog.stop(); }catch(e){} }
+
+function simulateMic(){
+  // simulate realistic score range
+  const acc = 55 + Math.floor(Math.random()*45);
+  const btn=document.getElementById('micBtn'), lbl=document.getElementById('micLbl');
+  if(btn){ btn.className='mic-btn idle'; btn.textContent='🎙️'; }
+  if(lbl) lbl.textContent='⚙️ جَارٍ التَّحْلِيل...';
+  setTimeout(()=> processAccuracy(acc), 1100);
+}
+
+function processTranscript(heard){
+  const expected = sent().tts;
+  const hw = heard.trim().split(/\s+/).map(stripDia);
+  const ew = expected.trim().split(/\s+/).map(stripDia);
+  let match=0;
+  ew.forEach(w=>{ if(hw.includes(w)) match++; });
+  processAccuracy(Math.round((match/ew.length)*100));
+}
+
+function stripDia(w){
+  // remove harakat for matching
+  return w.replace(/[\u064B-\u065F\u0610-\u061A\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED.,،؟!:]/g,'').trim();
+}
+
+function processAccuracy(acc){
+  S.pronScores.push(acc);
+  const btn=document.getElementById('micBtn'), lbl=document.getElementById('micLbl');
+  if(btn){ btn.className='mic-btn idle'; btn.textContent='🎙️'; }
+
+  // colour word chips randomly weighted by accuracy
+  sent().words.forEach((_,i)=>{
+    const chip=document.getElementById('wc'+i);
+    if(!chip) return;
+    chip.classList.add(Math.random()<acc/100?'heard':'miss');
+  });
+
+  // accuracy bar
+  const aw=document.getElementById('accWrap');
+  if(aw) aw.style.display='block';
+  const fill=document.getElementById('accFill'), pct=document.getElementById('accPct');
+  if(fill){ fill.style.width=acc+'%'; fill.className='acc-fill '+(acc>=70?'acc-g':acc>=40?'acc-o':'acc-r'); }
+  if(pct) pct.textContent=acc+'%';
+
+  if(acc>=70){
+    if(lbl) lbl.textContent='✅ نُطْقٌ جَيِّد!';
+    SND.goodPron();
+    // mini celebration for great pron
+    spawnParticles(['⭐','✨','🌟'], 6);
+  } else {
+    if(lbl) lbl.textContent='اُنْظُرِ النُّطْقَ الصَّحِيح أَدْنَاه';
+    SND.wrong();
+    // show correct pronunciation with full tashkeel
+    const hint=document.getElementById('pronHint'), ht=document.getElementById('pronHintText');
+    if(hint){ hint.style.display='block'; }
+    if(ht) ht.innerHTML = buildWordSpans(sent().text);
+    // replay TTS slowly so they hear the correct version
+    setTimeout(()=> speakSentence(sent().tts), 600);
+  }
+
+  const nb=document.getElementById('readNextBtn');
+  if(nb) nb.disabled=false;
+}
+
+function afterRead(){
+  SND.click();
+  S.sentIdx++;
+  if(S.sentIdx<nSents()){ S.phase='listen'; renderListen(); }
+  else { S.phase='comp'; renderComp(0); }
+}
+
+// ── COMPREHENSION PHASE ──
+function renderComp(qIdx){
+  const qs=story().questions;
+  if(qIdx>=qs.length){ finishStory(); return; }
+  const q=qs[qIdx];
+  const qDots=qs.map((_,i)=>`<div class="sp-dot${i<qIdx?' done-dot':i===qIdx?' active-dot':''}"></div>`).join('');
+
+  let body='';
+  if(q.type==='yesno'){
+    body=`<div class="yesno-row">
+      <button class="yn-btn" onclick="ansComp('نَعَم','${q.answer}',${qIdx})">✅ نَعَم</button>
+      <button class="yn-btn" onclick="ansComp('لَا','${q.answer}',${qIdx})">❌ لَا</button>
+    </div>`;
+  } else if(q.type==='choice'){
+    body=`<div class="comp-opts">${q.opts.map(o=>
+      `<button class="comp-opt" onclick="ansComp('${o}','${q.answer}',${qIdx})">${o}</button>`
+    ).join('')}</div>`;
+  } else {
+    body=`<input class="blank-inp" id="blankInp" placeholder="اِكْتُبْ هُنَا..." dir="rtl"/>
+      <div style="font-size:12px;color:var(--gray);margin-bottom:10px">تَلْمِيح: ${q.hint}</div>
+      <button class="btn btn-teal btn-lg" onclick="checkBlank('${q.answer}',${qIdx})">تَحَقَّق ✓</button>`;
+  }
+
+  document.getElementById('storyShell').innerHTML=`
+    ${metaHtml('فَهْم')}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <span style="font-size:14px;font-weight:800;color:var(--teal)">سُؤَال ${qIdx+1} مِنْ ${qs.length}</span>
+        <div style="display:flex;gap:6px">${qDots}</div>
+      </div>
+      <div class="comp-q">${q.q}</div>
+      ${body}
+      <div class="fb" id="fb"></div>
+    </div>
+  `;
+}
+
+function ansComp(chosen, correct, qIdx){
+  const ok = stripDia(chosen)===stripDia(correct);
+  S.compScores.push(ok?1:0);
+  const fb=document.getElementById('fb');
+  fb.style.display='block'; fb.className='fb '+(ok?'ok':'no');
+  fb.textContent = ok ? randomPraise()+' ✅' : `❌ الْإِجَابَةُ الصَّحِيحَة: ${correct}`;
+  document.querySelectorAll('.comp-opt,.yn-btn').forEach(b=>b.disabled=true);
+  if(ok){ SND.correct(); spawnParticles(['⭐','🌟','✨','🎉'],8); }
+  else  { SND.wrong(); }
+  setTimeout(()=>renderComp(qIdx+1), ok?1400:1200);
+}
+
+function checkBlank(correct, qIdx){
+  const val=(document.getElementById('blankInp')?.value||'').trim();
+  const ok = stripDia(val)===stripDia(correct);
+  S.compScores.push(ok?1:0);
+  const inp=document.getElementById('blankInp');
+  if(inp){ inp.disabled=true; inp.className='blank-inp '+(ok?'right':'wrong'); }
+  const fb=document.getElementById('fb');
+  fb.style.display='block'; fb.className='fb '+(ok?'ok':'no');
+  fb.textContent = ok ? randomPraise()+' ✅' : `❌ الْإِجَابَة: ${correct}`;
+  if(ok){ SND.correct(); spawnParticles(['⭐','🌟','✨'],8); }
+  else  { SND.wrong(); }
+  setTimeout(()=>renderComp(qIdx+1), ok?1400:1200);
+}
+
+// ═══════════════════════════════════════════════
+//  FINISH + AI DECISION
+// ═══════════════════════════════════════════════
+function finishStory(){
+  const pron = S.pronScores.length ? Math.round(S.pronScores.reduce((a,b)=>a+b)/S.pronScores.length) : 0;
+  const comp = S.compScores.length ? Math.round(S.compScores.reduce((a,b)=>a+b)/S.compScores.length*100) : 0;
+  S.allResults.push({pron,comp,storyId:story().id,lvIdx:S.lvIdx});
+  const earned = Math.round((pron+comp)/20)*5;
+  S.stars+=earned;
+  S.stIdx++;
+  const dec=aiDecision();
+  // big celebration before showing result
+  if(dec.action==='advance'){ SND.levelUp(); showCelebration('مَبْرُوك!','اِنْتَقَلْتَ لِلْمُسْتَوَى التَّالِي!','⭐⭐⭐⭐⭐', ()=>showResult(pron,comp,earned,dec)); }
+  else if(comp>=75||pron>=75){ SND.fanfare(); showCelebration(randomPraise(),'أَحْسَنْتَ! اِسْتَمِرّ','⭐⭐⭐', ()=>showResult(pron,comp,earned,dec)); }
+  else { SND.coin(); showResult(pron,comp,earned,dec); }
+}
+
+function aiDecision(){
+  const lvRes = S.allResults.filter(r=>r.lvIdx===S.lvIdx);
+  const n=lvRes.length;
+  if(n<2) return {action:'continue',msg:'أَكْمِلْ قِصَّةً أُخْرَى لِأَرَى أَدَاءَكَ بِشَكْلٍ أَوْضَح 📖'};
+  const ap=lvRes.reduce((a,r)=>a+r.pron,0)/n;
+  const ac=lvRes.reduce((a,r)=>a+r.comp,0)/n;
+  const ov=(ap+ac)/2;
+  if(ov>=75&&S.lvIdx<LEVELS.length-1) return {action:'advance', msg:`نُطْق ${Math.round(ap)}% · فَهْم ${Math.round(ac)}% — أَنْتَ جَاهِزٌ لِلْمُسْتَوَى التَّالِي! 🚀`, next:S.lvIdx+1};
+  if(ov>=55) return {action:'continue', msg:`نُطْق ${Math.round(ap)}% · فَهْم ${Math.round(ac)}% — قِصَّةٌ أُخْرَى سَتُقَوِّي مَهَارَاتِك 💪`};
+  return {action:'repeat', msg:`نُطْق ${Math.round(ap)}% · فَهْم ${Math.round(ac)}% — لَا تَقْلَق، لِنُحَاوِلْ مَرَّةً أُخْرَى 🔄`};
+}
+
+function showResult(pron,comp,earned,dec){
+  const ov=Math.round((pron+comp)/2);
+  const emoji=ov>=75?'🌟':ov>=55?'👍':'💪';
+  const bannerBg=dec.action==='advance'?'background:linear-gradient(135deg,#16a34a,#15803d)':dec.action==='repeat'?'background:linear-gradient(135deg,#c2410c,#9a3412)':'background:linear-gradient(135deg,var(--teal),#0e5a52)';
+  const nextBtn=dec.action==='advance'
+    ? `<button class="btn btn-gold btn-lg" onclick="advanceLv(${dec.next})">🎓 اِنْتَقِلْ لِلْمُسْتَوَى ${LEVELS[dec.next].id}</button>`
+    : `<button class="btn btn-teal btn-lg" onclick="startStory()">📖 ${dec.action==='repeat'?'أَعِدِ الْمُحَاوَلَة':'الْقِصَّةُ التَّالِيَة'}</button>`;
+
+  document.getElementById('resultContent').innerHTML=`
+    <div style="font-size:72px;margin-bottom:14px">${emoji}</div>
+    <div style="font-size:26px;font-weight:900;color:var(--teal);margin-bottom:6px">أَحْسَنْت!</div>
+    <div style="font-size:15px;color:var(--gray);margin-bottom:24px">اِكْتَسَبْتَ <strong style="color:var(--gold)">+${earned} نَجْمَة</strong></div>
+    <div class="lr-stats">
+      <div class="lr-stat"><div class="lr-val">${pron}%</div><div class="lr-lbl">النُّطْق 🎤</div></div>
+      <div class="lr-stat"><div class="lr-val">${comp}%</div><div class="lr-lbl">الْفَهْم 🧠</div></div>
+      <div class="lr-stat"><div class="lr-val">⭐${earned}</div><div class="lr-lbl">نُجُوم</div></div>
+    </div>
+    <div class="ai-banner" style="${bannerBg}">
+      <div style="font-size:26px">${dec.action==='advance'?'🎓':dec.action==='repeat'?'🔄':'📚'}</div>
+      <div><h4>${dec.action==='advance'?'اِنْتِقَالٌ لِلْمُسْتَوَى التَّالِي!':dec.action==='repeat'?'تَدَرَّبْ أَكْثَر':'اِسْتَمِرّ!'}</h4><p>${dec.msg}</p></div>
+    </div>
+    <div class="gap-col">
+      ${nextBtn}
+      <button class="btn btn-outline btn-lg" onclick="goHome()">🏠 الرَّئِيسِيَّة</button>
+    </div>
+  `;
+  show('resultScreen');
+}
+
+function advanceLv(idx){ S.lvIdx=idx; S.stIdx=0; startStory(); }
+
+// ═══════════════════════════════════════════════
+//  CELEBRATION SYSTEM
+// ═══════════════════════════════════════════════
+const PRAISE = [
+  'يَا بَطَل!','رَائِع!','مُمْتَاز!','أَحْسَنْت!','عَظِيم!',
+  'بَرَاڤُو!','يَا نَجْم!','مَا شَاءَ اللَّه!','اِسْتَمِرّ!','قَوِيّ!'
+];
+function randomPraise(){ return PRAISE[Math.floor(Math.random()*PRAISE.length)]; }
+
+let overlayTimer=null;
+function showCelebration(main, sub, stars, onDone){
+  S.pendingAction=onDone;
+  document.getElementById('praiseMain').textContent=main;
+  document.getElementById('praiseSub').textContent=sub;
+  document.getElementById('praiseStars').textContent=stars;
+  const ov=document.getElementById('overlay');
+  ov.classList.add('show');
+  // reset praise box animation
+  const pb=document.getElementById('praiseBox');
+  pb.style.animation='none'; pb.offsetHeight; pb.style.animation='';
+  // confetti
+  runConfetti();
+  // spawn floating emoji
+  spawnParticles(['🌟','⭐','🎉','✨','🏆','🎊','💫','🥳'],20);
+  // auto-dismiss after 3s
+  if(overlayTimer) clearTimeout(overlayTimer);
+  overlayTimer=setTimeout(hideOverlay, 3200);
+}
+
+function hideOverlay(){
+  document.getElementById('overlay').classList.remove('show');
+  stopConfetti();
+  if(overlayTimer){ clearTimeout(overlayTimer); overlayTimer=null; }
+  if(S.pendingAction){ const fn=S.pendingAction; S.pendingAction=null; setTimeout(fn,200); }
+}
+
+// ─── EMOJI PARTICLES ───
+function spawnParticles(emojis, count){
+  const ov=document.getElementById('overlay');
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    el.className='particle';
+    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    const angle=Math.random()*Math.PI*2;
+    const dist=120+Math.random()*180;
+    el.style.cssText=`
+      left:${40+Math.random()*20}%;
+      top:${35+Math.random()*15}%;
+      --tx:${Math.cos(angle)*dist}px;
+      --ty:${Math.sin(angle)*dist-60}px;
+      --r:${-180+Math.random()*360}deg;
+      --d:${0.9+Math.random()*.8}s;
+      animation-delay:${Math.random()*.3}s;
+    `;
+    ov.appendChild(el);
+    setTimeout(()=>el.remove(), 2200);
+  }
+}
+
+// ─── CANVAS CONFETTI ───
+let confettiAnim=null;
+const CONFETTI_COLORS=['#1a7a6e','#c8973a','#f5c842','#e53e3e','#22c55e','#7c3aed','#f97316','#2563eb'];
+const pieces=[];
+
+function runConfetti(){
+  const canvas=document.getElementById('confettiCanvas');
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  pieces.length=0;
+  for(let i=0;i<90;i++){
+    pieces.push({
+      x: Math.random()*canvas.width,
+      y: -10-Math.random()*100,
+      w: 8+Math.random()*8,
+      h: 4+Math.random()*5,
+      color: CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)],
+      vx: -2+Math.random()*4,
+      vy: 3+Math.random()*5,
+      rot: Math.random()*360,
+      vrot: -4+Math.random()*8,
+      alpha:1,
+    });
+  }
+  function frame(){
+    const ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p=>{
+      ctx.save();
+      ctx.globalAlpha=p.alpha;
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color;
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vrot;
+      p.vy+=0.07; p.alpha-=0.008;
+    });
+    confettiAnim=requestAnimationFrame(frame);
+  }
+  if(confettiAnim) cancelAnimationFrame(confettiAnim);
+  frame();
+}
+function stopConfetti(){
+  if(confettiAnim){ cancelAnimationFrame(confettiAnim); confettiAnim=null; }
+  const canvas=document.getElementById('confettiCanvas');
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function buildDash(){
+  const res=S.allResults, n=res.length;
+  const ap=n?Math.round(res.reduce((a,r)=>a+r.pron,0)/n):0;
+  const ac=n?Math.round(res.reduce((a,r)=>a+r.comp,0)/n):0;
+  const hist=res.length
+    ? res.slice().reverse().map(r=>{
+        const st=LEVELS.flatMap(l=>l.stories).find(s=>s.id===r.storyId);
+        const ov=Math.round((r.pron+r.comp)/2);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-lt)">
+          <div style="width:40px;height:40px;border-radius:10px;background:var(--teal-pale);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${st?.emoji||'📖'}</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:700">${st?.title||'قِصَّة'}</div>
+            <div style="font-size:12px;color:var(--gray)">نُطْق ${r.pron}% · فَهْم ${r.comp}%</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:${ov>=70?'var(--green-dk)':'var(--orange)'}">${ov}%</div>
+        </div>`;
+      }).join('')
+    : '<p style="color:var(--gray);font-size:14px;text-align:center;padding:20px">لَمْ تَقْرَأْ أَيَّ قِصَّةٍ بَعْد</p>';
+
+  document.getElementById('dashContent').innerHTML=`
+    <div style="background:linear-gradient(135deg,var(--teal),#0e5a52);border-radius:16px;padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:16px">
+      <div style="font-size:40px">👦</div>
+      <div>
+        <div style="font-size:20px;font-weight:900;color:white">طَالِب Qira</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:3px">الْمُسْتَوَى ${LEVELS[S.lvIdx].id} · ⭐ ${S.stars} نَجْمَة</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="lr-stat"><div class="lr-val">${LEVELS[S.lvIdx].id}</div><div class="lr-lbl">الْمُسْتَوَى</div></div>
+      <div class="lr-stat"><div class="lr-val">${ap}%</div><div class="lr-lbl">النُّطْق</div></div>
+      <div class="lr-stat"><div class="lr-val">${ac}%</div><div class="lr-lbl">الْفَهْم</div></div>
+    </div>
+    <div style="background:white;border-radius:14px;padding:20px;box-shadow:var(--shadow)">
+      <div style="font-size:15px;font-weight:800;color:var(--teal);margin-bottom:12px">📚 سِجِلُّ الْقِرَاءَة</div>
+      ${hist}
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-teal btn-lg" onclick="startStory()">📖 اِبْدَأْ قِصَّةً جَدِيدَة</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+buildLevels();
+</script>
+</body>
+</html>
