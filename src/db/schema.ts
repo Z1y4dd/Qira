@@ -25,7 +25,7 @@ import {
   timestamp,
   uuid,
 } from 'drizzle-orm/pg-core';
-import { authUsers, authenticatedRole } from 'drizzle-orm/supabase';
+import { authenticatedRole, authUsers } from 'drizzle-orm/supabase';
 
 // Enums --------------------------------------------------------------------
 
