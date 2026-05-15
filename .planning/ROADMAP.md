@@ -47,7 +47,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A parent enters the child profile picker on entry, selects a profile to set a signed "active child" cookie, and switching to a different child via a Server Action resets the cookie with no client-side leakage of the other profile's data
   4. A Playwright cross-user E2E test logs in as Parent A, then logs in as Parent B in a fresh context, and asserts no session bleed and no cross-user data visible — and a Vitest unit + grep CI check fails the build if any server file references `getSession()` or any authenticated route is missing `force-dynamic`
   5. A parent can read a short plain-language Privacy Notice page and, from the profile screen, request a JSON export of their child's data or hard-delete the child profile in one screen (deletion cascades through `attempts`, `attempt_answers`, and any derived data)
-**Plans:** TBD
+**Plans:** 0/6 plans executed
 **UI hint:** yes
 
 ### Phase 3: Placement Vertical
@@ -99,7 +99,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 5/6 | In Progress|  |
-| 2. Auth & Child Profiles | 0/TBD | Not started | - |
+| 2. Auth & Child Profiles | 0/6 | Planned    |  |
 | 3. Placement Vertical | 0/TBD | Not started | - |
 | 4. Reader & Comprehension Loop | 0/TBD | Not started | - |
 | 5. Mobile-Ready API & Pre-Launch Compliance | 0/TBD | Not started | - |
