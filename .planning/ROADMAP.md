@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 ## Phase Details
 
 ### Phase 1: Foundation
-**Goal:** A deployable Arabic-first shell with every architectural invariant that is expensive to retrofit (RTL, fonts, schema, RLS, NFC, SDK allow-list, ArabicText primitive, Service Layer skeleton) live on Vercel from commit 1
+**Goal:** As a solo developer on Qira, I want every expensive-to-retrofit invariant (RTL, fonts, schema, RLS, NFC, SDK allow-list, ArabicText primitive, Service Layer skeleton) live in main from commit 1, so that later phases never pay RTL/i18n retrofit cost or compliance debt
 **Mode:** mvp
 **Depends on:** Nothing (first phase)
 **Requirements:** FOUND-01, FOUND-02, FOUND-03, FOUND-04, FOUND-05, FOUND-06, FOUND-07, FOUND-08, FOUND-09, COMP-LEGAL-01
