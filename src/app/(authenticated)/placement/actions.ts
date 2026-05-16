@@ -6,7 +6,8 @@ import type { Route } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { ACTIVE_CHILD_COOKIE } from '@/lib/active-child-cookie';
-import { recordPlacementAnswer, startPlacement } from '@/services/placement';
+import { abortPlacement, recordPlacementAnswer, startPlacement } from '@/services/placement';
+import type { AttemptId } from '@/services/placement';
 import { AuthError, requireActiveChild } from '@/services/profiles';
 import { createClient } from '@/utils/supabase/server';
 
@@ -85,4 +86,35 @@ export async function recordPlacementAnswerAction(args: {
   }
 }
 
-// abortPlacementAction is added by Plan 05 wave 4 (escape-hatch wiring) — appended to this file.
+/**
+ * Aborts a placement attempt via the escape hatch (D-03).
+ * Validates the reason server-side (T-3-escape-hatch-bypass mitigation).
+ * Calls abortPlacement service to write escape_hatched=true + fallback level.
+ * Redirects to /placement/{attemptId}/result.
+ */
+export async function abortPlacementAction(args: {
+  attemptId: string;
+  reason: 'too_hard' | 'too_easy';
+}): Promise<void> {
+  // Runtime validation — type narrowing alone is insufficient (client can forge POST body)
+  if (args.reason !== 'too_hard' && args.reason !== 'too_easy') {
+    throw new Error('INVALID_ESCAPE_REASON');
+  }
+  if (!args.attemptId || typeof args.attemptId !== 'string') {
+    throw new Error('abortPlacementAction: attemptId is required');
+  }
+
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  try {
+    await requireActiveChild(supabase, cookieStore.get(ACTIVE_CHILD_COOKIE)?.value);
+  } catch (err) {
+    if (err instanceof AuthError) redirect('/choose-child');
+    throw err;
+  }
+
+  await abortPlacement({ attemptId: args.attemptId as AttemptId, reason: args.reason });
+
+  redirect(`/placement/${args.attemptId}/result` as Route);
+}
