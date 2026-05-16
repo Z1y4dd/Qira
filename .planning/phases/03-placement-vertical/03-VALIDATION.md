@@ -2,7 +2,7 @@
 phase: 3
 slug: placement-vertical
 status: draft
-nyquist_compliant: false
+nyquist_compliant: true
 wave_0_complete: false
 created: 2026-05-16
 ---
@@ -62,9 +62,10 @@ Per RESEARCH §"Seven Wave 0 test files", the planner must create these files in
 - [ ] `src/services/placement.test.ts` — pure-function tests for `assignLevel()` (covers PLAC-01)
 - [ ] `src/services/placement.integration.test.ts` — full placement loop, escape hatch, reset (covers PLAC-03, PLAC-04, PLAC-07)
 - [ ] `src/db/seed/placement-placeholder.test.ts` — seed correctness (covers PLAC-08)
-- [ ] `tests/invariants/placement-bundle-leak.test.ts` — grep the rendered HTML for correct-choice IDs (covers PLAC-02)
+- [ ] `tests/invariants/placement-bundle-leak.test.ts` — grep src/app + src/components for `isCorrect` (code-level gate; covers PLAC-02). RUNTIME COMPLEMENT (revision 1): Plan 05 Task 5.3 adds a Playwright `page.waitForResponse()` assertion against the RSC wire payload — together they satisfy RESEARCH §'Validation Architecture Pillar 2'.
 - [ ] `tests/e2e/placement-cross-parent.spec.ts` — Playwright cross-parent RLS (covers PLAC-05)
 - [ ] `tests/e2e/placement-escape-hatch.spec.ts` — Playwright escape-hatch visibility on every placement screen (covers PLAC-06)
+- [ ] `tests/e2e/placement-flow.spec.ts` — Playwright happy-path placement loop (covers PLAC-01 gate redirect + PLAC-05 result + parent-manage display) — added in revision 1 to satisfy VALIDATION.md `pnpm e2e --grep 'placement-flow'` target. Stubbed in Plan 01 Task 1.6; bodies filled in Plan 06 Task 6.3.
 - [ ] `scripts/db-verify-columns.sh` (or `.ts`) — SELECT against information_schema.columns to confirm migration applied to live DB
 
 ---
