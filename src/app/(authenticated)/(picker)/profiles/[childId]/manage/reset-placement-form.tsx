@@ -37,13 +37,7 @@ export function ResetPlacementForm({ childId, childName, state }: ResetPlacement
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full"
-          disabled={isDisabled}
-          type="button"
-        >
+        <Button variant="outline" size="lg" className="w-full" disabled={isDisabled} type="button">
           <ArabicText size="ui">إعادة التقييم</ArabicText>
         </Button>
       </DialogTrigger>

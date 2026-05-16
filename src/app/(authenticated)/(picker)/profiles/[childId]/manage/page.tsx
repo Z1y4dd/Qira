@@ -77,16 +77,14 @@ export default async function ManageProfilePage({
     if (placementState === 'completed') {
       return (
         <ArabicText size="ui" className="block">
-          المستوى المُعيَّن:{' '}
-          <bdi dir="ltr">{assignedLevelNumber ?? '—'}</bdi>
+          المستوى المُعيَّن: <bdi dir="ltr">{assignedLevelNumber ?? '—'}</bdi>
         </ArabicText>
       );
     }
     // escape_hatched
     return (
       <ArabicText size="ui" className="block">
-        تم تخطي التقييم — المستوى التقريبي:{' '}
-        <bdi dir="ltr">{assignedLevelNumber ?? '—'}</bdi>
+        تم تخطي التقييم — المستوى التقريبي: <bdi dir="ltr">{assignedLevelNumber ?? '—'}</bdi>
       </ArabicText>
     );
   }
