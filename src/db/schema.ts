@@ -15,8 +15,10 @@
 
 import { sql } from 'drizzle-orm';
 import {
+  boolean,
   check,
   integer,
+  jsonb,
   pgEnum,
   pgPolicy,
   pgTable,
@@ -31,6 +33,7 @@ import { authenticatedRole, authUsers } from 'drizzle-orm/supabase';
 
 export const attemptKind = pgEnum('attempt_kind', ['placement', 'reading']);
 export const questionKind = pgEnum('question_kind', ['placement', 'comprehension']);
+export const escapeHatchReason = pgEnum('escape_hatch_reason', ['too_hard', 'too_easy']);
 
 // 1. parents — 1:1 with auth.users (vendor lock-in insulation per Pitfall 15)
 export const parents = pgTable(
@@ -170,6 +173,7 @@ export const texts = pgTable(
     wordCount: integer('word_count').notNull(),
     genre: text('genre'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    isPlaceholder: boolean('is_placeholder').default(false).notNull(),
   },
   (_table) => [
     pgPolicy('texts_select', {
@@ -212,6 +216,7 @@ export const questions = pgTable(
     promptAr: text('prompt_ar').notNull(),
     questionType: text('question_type').notNull(),
     position: integer('position').notNull(),
+    isPlaceholder: boolean('is_placeholder').default(false).notNull(),
   },
   (_table) => [
     pgPolicy('questions_select', {
@@ -299,6 +304,10 @@ export const attempts = pgTable(
     score: integer('score'),
     startedAt: timestamp('started_at', { withTimezone: true }).defaultNow().notNull(),
     finishedAt: timestamp('finished_at', { withTimezone: true }),
+    escapeHatched: boolean('escape_hatched').default(false).notNull(),
+    escapeHatchedAt: timestamp('escape_hatched_at', { withTimezone: true }),
+    escapeHatchedReason: escapeHatchReason('escape_hatched_reason'),
+    placementBankVersion: integer('placement_bank_version'),
   },
   (table) => [
     pgPolicy('attempts_select', {
@@ -345,6 +354,7 @@ export const attemptAnswers = pgTable(
       .references(() => choices.id),
     isCorrect: integer('is_correct').notNull(),
     answeredAt: timestamp('answered_at', { withTimezone: true }).defaultNow().notNull(),
+    choiceOrder: jsonb('choice_order'),
   },
   (table) => [
     pgPolicy('attempt_answers_select', {
