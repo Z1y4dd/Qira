@@ -12,7 +12,7 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="relative">
+    <div className="relative" dir="ltr">
       <Input
         {...props}
         type={visible ? 'text' : 'password'}
