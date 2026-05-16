@@ -65,9 +65,11 @@ async function createAndSelectChild(
   await page.click('button[type="submit"]');
   await expect(page).toHaveURL(/\/choose-child/);
 
-  // Select the child — submits a form that sets qira_active_child cookie and redirects /dashboard
+  // Select the child — submits a form that sets qira_active_child cookie and redirects /dashboard.
+  // With the (placement-gate) layout now live, unplaced children are immediately redirected
+  // to /placement/start from /dashboard. Accept either URL.
   await page.getByText(childName).click();
-  await expect(page).toHaveURL(/\/dashboard/);
+  await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
   // Extract the child ID from the profile manage link in the page, or from cookies
   const cookies = await page.context().cookies();
@@ -133,7 +135,8 @@ test.describe.serial('placement escape hatch', () => {
     await page.goto('/choose-child');
     // Click whichever child is there (the one we created)
     await page.locator('button[type="submit"]').first().click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     await navigateToPlacementStart(page);
     await startPlacement(page);
@@ -148,7 +151,8 @@ test.describe.serial('placement escape hatch', () => {
     await signIn(page, parent);
     await page.goto('/choose-child');
     await page.locator('button[type="submit"]').first().click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     await navigateToPlacementStart(page);
     await startPlacement(page);
@@ -167,7 +171,8 @@ test.describe.serial('placement escape hatch', () => {
     await signIn(page, parent);
     await page.goto('/choose-child');
     await page.locator('button[type="submit"]').first().click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     await navigateToPlacementStart(page);
     await startPlacement(page);
@@ -195,7 +200,8 @@ test.describe.serial('placement escape hatch', () => {
     await signIn(page, parent);
     await page.goto('/choose-child');
     await page.locator('button[type="submit"]').first().click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     await navigateToPlacementStart(page);
     const attemptId = await startPlacement(page);
@@ -230,7 +236,8 @@ test.describe.serial('placement escape hatch', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/choose-child/);
     await page.getByText(childName2).click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     await navigateToPlacementStart(page);
     const attemptId = await startPlacement(page);
@@ -264,7 +271,8 @@ test.describe.serial('placement escape hatch', () => {
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/\/choose-child/);
     await page.getByText(childName3).click();
-    await expect(page).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(page).toHaveURL(/\/(dashboard|placement\/start)/);
 
     // Start placement — lands on passage screen
     await navigateToPlacementStart(page);

@@ -81,7 +81,8 @@ test.describe.serial('cross-user isolation', () => {
     await pageA.click('label[for="grade-3-4"]');
     await pageA.click('button[type="submit"]');
     await pageA.getByText(aName).click(); // submits the "اختيار" form
-    await expect(pageA).toHaveURL(/\/dashboard/);
+    // Unplaced child is redirected to /placement/start by the (placement-gate) layout.
+    await expect(pageA).toHaveURL(/\/(dashboard|placement\/start)/);
 
     const cookies = await ctxA.cookies();
     const active = cookies.find((c) => c.name === 'qira_active_child');
