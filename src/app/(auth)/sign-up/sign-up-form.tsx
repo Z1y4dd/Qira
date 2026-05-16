@@ -6,6 +6,7 @@ import { GoogleButton } from '@/components/auth/google-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Separator } from '@/components/ui/separator';
 import { type SignUpActionState, signUpAction } from './actions';
 
@@ -41,11 +42,9 @@ export function SignUpForm() {
         <Label htmlFor="password">
           <ArabicText size="ui">كلمة المرور</ArabicText>
         </Label>
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
-          dir="ltr"
           autoComplete="new-password"
           required
           aria-invalid={Boolean(state?.error?.password)}

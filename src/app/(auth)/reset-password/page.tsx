@@ -11,18 +11,23 @@ export const dynamic = 'force-dynamic';
 export default async function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: Promise<{ code?: string }>;
+  searchParams: Promise<{ code?: string; token_hash?: string; type?: string }>;
 }) {
   const params = await searchParams;
-  const code = params.code;
-
-  if (!code) {
-    return <ResetError />;
-  }
-
   const supabase = createClient(await cookies());
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
-  if (error) {
+
+  if (params.code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(params.code);
+    if (error) return <ResetError />;
+  } else if (params.token_hash && params.type === 'recovery') {
+    // Supabase sends token_hash when the PKCE verifier cookie is absent
+    // (e.g. user opened the email on a different device/browser).
+    const { error } = await supabase.auth.verifyOtp({
+      token_hash: params.token_hash,
+      type: 'recovery',
+    });
+    if (error) return <ResetError />;
+  } else {
     return <ResetError />;
   }
 

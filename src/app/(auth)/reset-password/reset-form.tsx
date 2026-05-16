@@ -3,8 +3,8 @@
 import { useActionState } from 'react';
 import { ArabicText } from '@/components/arabic-text';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { PasswordInput } from '@/components/ui/password-input';
 import { applyResetAction, type ResetApplyActionState } from './actions';
 
 export function ResetForm() {
@@ -19,11 +19,9 @@ export function ResetForm() {
         <Label htmlFor="password">
           <ArabicText size="ui">كلمة المرور الجديدة</ArabicText>
         </Label>
-        <Input
+        <PasswordInput
           id="password"
           name="password"
-          type="password"
-          dir="ltr"
           autoComplete="new-password"
           required
           aria-invalid={Boolean(state?.error?.password)}
@@ -39,11 +37,9 @@ export function ResetForm() {
         <Label htmlFor="confirmPassword">
           <ArabicText size="ui">أعد إدخال كلمة المرور</ArabicText>
         </Label>
-        <Input
+        <PasswordInput
           id="confirmPassword"
           name="confirmPassword"
-          type="password"
-          dir="ltr"
           autoComplete="new-password"
           required
           aria-invalid={Boolean(state?.error?.confirmPassword)}

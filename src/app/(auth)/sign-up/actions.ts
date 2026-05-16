@@ -27,7 +27,7 @@ export async function signUpAction(
   }
 
   const supabase = createClient(await cookies());
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -37,6 +37,12 @@ export async function signUpAction(
 
   if (error) {
     return { error: { _form: [supabaseErrorAr(error)] } };
+  }
+
+  // Supabase silently succeeds for existing emails (prevents enumeration) but
+  // returns an empty identities array — surface it as a clear error.
+  if (data.user && data.user.identities?.length === 0) {
+    return { error: { _form: ['هذا البريد مسجّل بالفعل — جرّب تسجيل الدخول'] } };
   }
 
   redirect('/verify-email');
