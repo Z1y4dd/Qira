@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 Plan 04 complete — Placement Flow UI
-last_updated: "2026-05-16T22:25:00.000Z"
-last_activity: 2026-05-16 -- Phase 03 Plan 04 (Placement Flow UI) complete
+stopped_at: Phase 3 Plan 05 complete — Escape Hatch
+last_updated: "2026-05-16T19:37:00.000Z"
+last_activity: 2026-05-16 -- Phase 03 Plan 05 (Escape Hatch) complete
 progress:
   total_phases: 5
   completed_phases: 1
   total_plans: 18
-  completed_plans: 15
-  percent: 83
+  completed_plans: 17
+  percent: 94
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-14)
 
 ## Current Position
 
-Phase: 3 (Placement Vertical) — executing (4 of 6 plans complete)
-Next plan: 03-05 (Escape-hatch action wiring)
+Phase: 3 (Placement Vertical) — executing (5 of 6 plans complete)
+Next plan: 03-06 (Placement integration + E2E verification)
 Status: Executing
-Last activity: 2026-05-16 -- Phase 03 Plan 04 (Placement Flow UI) complete
+Last activity: 2026-05-16 -- Phase 03 Plan 05 (Escape Hatch) complete
 
 Progress: Phases 1+2 of 5 done — live at https://qira-nine.vercel.app. Phase 3 Plans 01+02/06 done.
 
@@ -68,6 +68,8 @@ Recent decisions affecting current work:
 - 03-01: Migration renamed from drizzle-kit default slug (0001_loving_grandmaster) to 0001_phase3_placement for clarity
 - 03-02: Idempotency via isPlaceholder count guard (not a dedicated version table) — Plan 03 writes placementBankVersion: 1 on attempts
 - 03-02: Integration test file loads dotenv config({ path: .env.local }) to expose DATABASE_URL to Vitest runner
+- 03-05: abortPlacementAction validates reason at runtime (not just TypeScript type) to close T-3-escape-hatch-bypass; type narrowing alone insufficient for server action args
+- 03-05: EscapeHatch reader-mode branch keeps console.warn stub + TODO comment for Phase 4 to wire shiftLevelAction
 
 ### Pending Todos
 
@@ -93,6 +95,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-16T22:25:00.000Z
-Stopped at: Phase 3 Plan 04 complete — Placement Flow UI
-Resume file: .planning/phases/03-placement-vertical/03-05-PLAN.md
+Last session: 2026-05-16T19:37:00.000Z
+Stopped at: Phase 3 Plan 05 complete — Escape Hatch
+Resume file: .planning/phases/03-placement-vertical/03-06-PLAN.md

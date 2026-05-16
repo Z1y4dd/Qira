@@ -65,9 +65,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 Plans:
 - [x] 03-01-PLAN.md — Wave 0: schema migration + AlertDialog install + test stubs + db-verify-columns script
 - [x] 03-02-PLAN.md — Placeholder Arabic placement bank (5 passages, 15 questions, 60 choices)
-- [ ] 03-03-PLAN.md — Algorithm (assignLevel pure fn) + Service Layer (getPlacementState, startPlacement, recordPlacementAnswer, abortPlacement, resetPlacement)
-- [ ] 03-04-PLAN.md — Placement UI: route group, passage/question screens, choice cards, progress dots, Server Actions
-- [ ] 03-05-PLAN.md — Always-visible escape hatch with AlertDialog confirmation + Phase 4 reuse via mode prop
+- [x] 03-03-PLAN.md — Algorithm (assignLevel pure fn) + Service Layer (getPlacementState, startPlacement, recordPlacementAnswer, abortPlacement, resetPlacement)
+- [x] 03-04-PLAN.md — Placement UI: route group, passage/question screens, choice cards, progress dots, Server Actions
+- [x] 03-05-PLAN.md — Always-visible escape hatch with AlertDialog confirmation + Phase 4 reuse via mode prop
 - [ ] 03-06-PLAN.md — Placement-state gate (placement-gate route group) + parent reset on /profiles/[childId]/manage
 **UI hint:** yes
 
