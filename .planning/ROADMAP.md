@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation** - RTL-first Arabic shell deployed on Vercel with schema, RLS, fonts, ArabicText primitive, and CI gates in place
 - [x] **Phase 2: Auth & Child Profiles** - Parent can sign up, manage child profiles, and exercise their data-access rights; SSR cookie leak provably impossible
-- [ ] **Phase 3: Placement Vertical** - New child profile takes deterministic placement assessment and lands at a calibrated level with an always-visible escape hatch
+- [x] **Phase 3: Placement Vertical** - New child profile takes deterministic placement assessment and lands at a calibrated level with an always-visible escape hatch
 - [ ] **Phase 4: Reader & Comprehension Loop** - Child reads a leveled Arabic passage with Tashkeel and answers comprehension questions with supportive feedback, server-authoritatively scored
 - [ ] **Phase 5: Mobile-Ready API & Pre-Launch Compliance** - `/api/v1/*` surface plus first-party analytics, written retention policy, and full compliance closeout
 
@@ -61,14 +61,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. On completion, the child sees a friendly "we picked Level X for you" screen, the parent sees the same assignment in the profile view, and the result row lives in `attempts` with `kind = 'placement'`
   4. A child or parent sees a one-tap "this is too hard / too easy" escape hatch during AND after placement; tapping it shifts the assigned level by one step, is logged, and continues to be visible on every later reader screen
   5. A parent can reset placement from the child profile screen and the child can retake it — a literacy specialist's review of the placement bank is logged in the phase exit notes (formal piloting with ≥10 real kids is reserved for Phase 5 gate)
-**Plans:** 2/6 plans executed
+**Plans:** 6/6 plans executed
 Plans:
 - [x] 03-01-PLAN.md — Wave 0: schema migration + AlertDialog install + test stubs + db-verify-columns script
 - [x] 03-02-PLAN.md — Placeholder Arabic placement bank (5 passages, 15 questions, 60 choices)
 - [x] 03-03-PLAN.md — Algorithm (assignLevel pure fn) + Service Layer (getPlacementState, startPlacement, recordPlacementAnswer, abortPlacement, resetPlacement)
 - [x] 03-04-PLAN.md — Placement UI: route group, passage/question screens, choice cards, progress dots, Server Actions
 - [x] 03-05-PLAN.md — Always-visible escape hatch with AlertDialog confirmation + Phase 4 reuse via mode prop
-- [ ] 03-06-PLAN.md — Placement-state gate (placement-gate route group) + parent reset on /profiles/[childId]/manage
+- [x] 03-06-PLAN.md — Placement-state gate (placement-gate route group) + parent reset on /profiles/[childId]/manage
 **UI hint:** yes
 
 ### Phase 4: Reader & Comprehension Loop

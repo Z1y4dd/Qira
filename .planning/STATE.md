@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 3 Plan 05 complete — Escape Hatch
-last_updated: "2026-05-16T19:37:00.000Z"
-last_activity: 2026-05-16 -- Phase 03 Plan 05 (Escape Hatch) complete
+stopped_at: Phase 3 Plan 06 complete — Placement Gate & Parent Reset
+last_updated: "2026-05-16T22:55:00.000Z"
+last_activity: 2026-05-16 -- Phase 03 Plan 06 (Placement Gate & Parent Reset) complete — Phase 3 DONE
 progress:
   total_phases: 5
-  completed_phases: 1
+  completed_phases: 3
   total_plans: 18
-  completed_plans: 17
-  percent: 94
+  completed_plans: 18
+  percent: 100
 ---
 
 # Project State
@@ -25,12 +25,12 @@ See: .planning/PROJECT.md (updated 2026-05-14)
 
 ## Current Position
 
-Phase: 3 (Placement Vertical) — executing (5 of 6 plans complete)
-Next plan: 03-06 (Placement integration + E2E verification)
-Status: Executing
-Last activity: 2026-05-16 -- Phase 03 Plan 05 (Escape Hatch) complete
+Phase: 3 (Placement Vertical) — COMPLETE (6 of 6 plans complete)
+Next plan: Phase 4 (Reader + Comprehension) — Plan 01
+Status: Phase 3 complete — ready for Phase 4
+Last activity: 2026-05-16 -- Phase 03 Plan 06 (Placement Gate & Parent Reset) complete
 
-Progress: Phases 1+2 of 5 done — live at https://qira-nine.vercel.app. Phase 3 Plans 01+02/06 done.
+Progress: Phases 1+2+3 of 5 done — live at https://qira-nine.vercel.app. Phase 3 all 6/6 plans complete.
 
 ## Performance Metrics
 
@@ -70,6 +70,7 @@ Recent decisions affecting current work:
 - 03-02: Integration test file loads dotenv config({ path: .env.local }) to expose DATABASE_URL to Vitest runner
 - 03-05: abortPlacementAction validates reason at runtime (not just TypeScript type) to close T-3-escape-hatch-bypass; type narrowing alone insufficient for server action args
 - 03-05: EscapeHatch reader-mode branch keeps console.warn stub + TODO comment for Phase 4 to wire shiftLevelAction
+- 03-06: D-03 takes precedence over D-06 for placement gate — escape_hatched children pass through (have valid fallback level); only not_started + in_progress are redirected to /placement/start
 
 ### Pending Todos
 
@@ -95,6 +96,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-05-16T19:37:00.000Z
-Stopped at: Phase 3 Plan 05 complete — Escape Hatch
-Resume file: .planning/phases/03-placement-vertical/03-06-PLAN.md
+Last session: 2026-05-16T22:55:00.000Z
+Stopped at: Phase 3 Plan 06 complete — Placement Gate & Parent Reset
+Resume file: .planning/phases/04-reader-comprehension/04-01-PLAN.md (Phase 4 begins)
