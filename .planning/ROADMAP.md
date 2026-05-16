@@ -61,9 +61,9 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. On completion, the child sees a friendly "we picked Level X for you" screen, the parent sees the same assignment in the profile view, and the result row lives in `attempts` with `kind = 'placement'`
   4. A child or parent sees a one-tap "this is too hard / too easy" escape hatch during AND after placement; tapping it shifts the assigned level by one step, is logged, and continues to be visible on every later reader screen
   5. A parent can reset placement from the child profile screen and the child can retake it — a literacy specialist's review of the placement bank is logged in the phase exit notes (formal piloting with ≥10 real kids is reserved for Phase 5 gate)
-**Plans:** 6 plans
+**Plans:** 1/6 plans executed
 Plans:
-- [ ] 03-01-PLAN.md — Wave 0: schema migration + AlertDialog install + test stubs + db-verify-columns script
+- [x] 03-01-PLAN.md — Wave 0: schema migration + AlertDialog install + test stubs + db-verify-columns script
 - [ ] 03-02-PLAN.md — Placeholder Arabic placement bank (5 passages, 15 questions, 60 choices)
 - [ ] 03-03-PLAN.md — Algorithm (assignLevel pure fn) + Service Layer (getPlacementState, startPlacement, recordPlacementAnswer, abortPlacement, resetPlacement)
 - [ ] 03-04-PLAN.md — Placement UI: route group, passage/question screens, choice cards, progress dots, Server Actions
@@ -107,6 +107,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 |-------|----------------|--------|-----------|
 | 1. Foundation | 6/6 | Complete   | 2026-05-15 |
 | 2. Auth & Child Profiles | 6/6 | Complete   | 2026-05-15 |
-| 3. Placement Vertical | 0/TBD | Not started | - |
+| 3. Placement Vertical | 1/6 | In Progress|  |
 | 4. Reader & Comprehension Loop | 0/TBD | Not started | - |
 | 5. Mobile-Ready API & Pre-Launch Compliance | 0/TBD | Not started | - |

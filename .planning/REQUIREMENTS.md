@@ -39,14 +39,14 @@ Thin-slice MVP. Every requirement here is a Tier-A ship-blocker per `research/FE
 
 ### Placement Assessment
 
-- [ ] **PLAC-01**: New child profile is prompted to take a placement assessment before the library is available
-- [ ] **PLAC-02**: Placement uses a hand-authored bank of ~15 multiple-choice items spanning 4–6 staggered-difficulty passages calibrated to Levels 1–20
-- [ ] **PLAC-03**: Placement algorithm is deterministic and rules-based: parent-supplied age/grade is a strong prior; per-passage accuracy adjusts the level estimate; algorithm biases DOWN on uncertainty (per `research/PITFALLS.md` — wrong-level-day-1 is the #1 churn driver)
-- [ ] **PLAC-04**: Placement scoring runs server-side; correct answers are never sent to the browser before the child submits
-- [ ] **PLAC-05**: On completion, the child sees a friendly "we picked Level X for you" screen; the parent sees the same assignment in the profile view
-- [ ] **PLAC-06**: A one-tap "this is too hard / too easy" escape hatch is visible during AND after placement; tapping it shifts the child's assigned level by one step and is logged
-- [ ] **PLAC-07**: Parent can reset placement and retake it from the child profile screen
-- [ ] **PLAC-08**: Placement results are persisted in `attempts` with type `placement` (kept for future dashboards even though dashboards are out of v1 scope)
+- [x] **PLAC-01**: New child profile is prompted to take a placement assessment before the library is available
+- [x] **PLAC-02**: Placement uses a hand-authored bank of ~15 multiple-choice items spanning 4–6 staggered-difficulty passages calibrated to Levels 1–20
+- [x] **PLAC-03**: Placement algorithm is deterministic and rules-based: parent-supplied age/grade is a strong prior; per-passage accuracy adjusts the level estimate; algorithm biases DOWN on uncertainty (per `research/PITFALLS.md` — wrong-level-day-1 is the #1 churn driver)
+- [x] **PLAC-04**: Placement scoring runs server-side; correct answers are never sent to the browser before the child submits
+- [x] **PLAC-05**: On completion, the child sees a friendly "we picked Level X for you" screen; the parent sees the same assignment in the profile view
+- [x] **PLAC-06**: A one-tap "this is too hard / too easy" escape hatch is visible during AND after placement; tapping it shifts the child's assigned level by one step and is logged
+- [x] **PLAC-07**: Parent can reset placement and retake it from the child profile screen
+- [x] **PLAC-08**: Placement results are persisted in `attempts` with type `placement` (kept for future dashboards even though dashboards are out of v1 scope)
 
 ### Leveled Library & Reader
 
@@ -181,14 +181,14 @@ Every v1 requirement is mapped to exactly one roadmap phase. Coverage: 55/55.
 | PROF-06 | Phase 2 | Pending |
 | COMP-LEGAL-03 | Phase 2 | Pending |
 | COMP-LEGAL-04 | Phase 2 | Pending |
-| PLAC-01 | Phase 3 | Pending |
-| PLAC-02 | Phase 3 | Pending |
-| PLAC-03 | Phase 3 | Pending |
-| PLAC-04 | Phase 3 | Pending |
-| PLAC-05 | Phase 3 | Pending |
-| PLAC-06 | Phase 3 | Pending |
-| PLAC-07 | Phase 3 | Pending |
-| PLAC-08 | Phase 3 | Pending |
+| PLAC-01 | Phase 3 | Complete |
+| PLAC-02 | Phase 3 | Complete |
+| PLAC-03 | Phase 3 | Complete |
+| PLAC-04 | Phase 3 | Complete |
+| PLAC-05 | Phase 3 | Complete |
+| PLAC-06 | Phase 3 | Complete |
+| PLAC-07 | Phase 3 | Complete |
+| PLAC-08 | Phase 3 | Complete |
 | LIB-01 | Phase 4 | Pending |
 | LIB-02 | Phase 4 | Pending |
 | LIB-03 | Phase 4 | Pending |
