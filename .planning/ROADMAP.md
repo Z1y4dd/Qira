@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation** - RTL-first Arabic shell deployed on Vercel with schema, RLS, fonts, ArabicText primitive, and CI gates in place
 - [x] **Phase 2: Auth & Child Profiles** - Parent can sign up, manage child profiles, and exercise their data-access rights; SSR cookie leak provably impossible
 - [x] **Phase 3: Placement Vertical** - New child profile takes deterministic placement assessment and lands at a calibrated level with an always-visible escape hatch
-- [ ] **Phase 4: Reader & Comprehension Loop** - Child reads a leveled Arabic passage with Tashkeel and answers comprehension questions with supportive feedback, server-authoritatively scored
+- [ ] **Phase 4: Reader & Comprehension Loop — Happy Path** - Child reads one auto-routed passage at their level and answers comprehension questions on a single attempt, with server-authoritative scoring (retry + a11y polish deferred to Phase 4.1; library browse deferred to Phase 4.2)
 - [ ] **Phase 5: Mobile-Ready API & Pre-Launch Compliance** - `/api/v1/*` surface plus first-party analytics, written retention policy, and full compliance closeout
 
 ## Phase Details
@@ -71,17 +71,17 @@ Plans:
 - [x] 03-06-PLAN.md — Placement-state gate (placement-gate route group) + parent reset on /profiles/[childId]/manage
 **UI hint:** yes
 
-### Phase 4: Reader & Comprehension Loop
-**Goal:** A child can browse the library at their level, read a leveled Arabic passage in a kid-friendly reader, answer comprehension questions, and see a supportive result — the core value loop end-to-end
+### Phase 4: Reader & Comprehension Loop — Happy Path
+**Goal:** As a child who has been placed at a reading level, I want to read one passage at my level and answer its comprehension questions on the first try, so that I can see a friendly score and know whether I understood it.
 **Mode:** mvp
 **Depends on:** Phase 3
-**Requirements:** LIB-01, LIB-02, LIB-03, LIB-04, LIB-05, LIB-06, COMP-01, COMP-02, COMP-03, COMP-04, COMP-05, COMP-06, COMP-07, COMP-08, POLISH-01, POLISH-02, POLISH-03, POLISH-04
+**Requirements:** LIB-03, LIB-04, LIB-05, LIB-06, COMP-01, COMP-02, COMP-03, COMP-04, COMP-05, COMP-07, COMP-08
 **Success Criteria** (what must be TRUE):
-  1. A child opens the library and sees texts at their assigned level (with an optional "show one above / one below" toggle); tapping an entry — which displays title, level badge, and an illustration placeholder — enters the reader
-  2. A child reads an Arabic passage rendered in Noto Naskh Arabic at line-height ≥ 1.8, with Tashkeel ON by default for Levels 1–10 and OFF by default for Levels 11–20 (toggle present at all levels), with mixed Arabic+Latin tokens (names, numbers) rendering correctly via `<bdi>` — verified by Playwright visual regression at desktop + mobile widths in Chromium and WebKit
-  3. A child sees 4–6 comprehension questions per text in randomized order with randomized choice order, submits a choice via a Server Action whose response is server-authoritative (the browser submits a choice ID, the server returns correctness), and on a wrong first answer gets supportive feedback ("let's look at that again") and a single retry that is then scored
-  4. A child finishes a session and sees a kid-readable result screen with score and a single CTA back to the library — and the attempt is persisted in `attempts` + `attempt_answers` with the question-type distribution (literal ~30% / vocab ~25–30% / inferential ~25% / prediction-or-evaluative ~15–20%) tracked per-answer
-  5. A child's entire interactive surface meets kid-touch minimums (≥ 44×44 CSS px, no hover-only affordances, friendly Arabic loading copy, recoverable Arabic error states with no raw HTTP / no English fallback strings) — verified by a Playwright accessibility audit AND a literacy-specialist sign-off on the seed comprehension bank (recall ≤ 40% of items, no Ctrl-F-able answers) is logged as a phase exit gate
+  1. A placed child lands on one passage at their assigned level (auto-routed — no library UI yet) and the passage renders in Noto Naskh Arabic at line-height ≥ 1.8, Tashkeel ON for Levels 1–10 / OFF for 11–20 with toggle present at all levels, `<bdi>` correctly handling mixed Arabic+Latin tokens — verified by Playwright visual regression at desktop + mobile in Chromium and WebKit
+  2. After finishing the passage the child sees 4–6 hand-authored comprehension questions in randomized order, each multiple-choice with 3–4 choices in randomized order, with the question-type distribution targeted at literal ~30% / vocab ~25–30% / inferential ~25% / prediction-or-evaluative ~15–20%
+  3. The child submits a choice via a Server Action; the browser sends only the choice ID and the server returns correctness — devtools inspection of the page bundle reveals zero correct-answer data shipped to the client
+  4. After all questions are answered on a single attempt (no retry in this phase), the child sees a kid-readable result screen with score and a single CTA, and the attempt is persisted in `attempts` + `attempt_answers` with `kind = 'comprehension'`
+  5. The seed comprehension bank ships with at least one passage and 4–6 questions at Level 5 (or whichever placement Level the test child sits at), flagged as placeholder pending literacy-specialist sign-off — no retry, no error/loading polish, no library browse (those are explicit Phase 4.1 / 4.2 scope)
 **Plans:** TBD
 **UI hint:** yes
 
