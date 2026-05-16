@@ -19,6 +19,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "tsx src/db/seed/index.ts",
+    "db:seed:placement": "tsx src/db/seed/placement-placeholder.ts",
     "db:verify-columns": "tsx scripts/db-verify-columns.ts",
     "e2e": "playwright test",
     "e2e:update-snapshots": "playwright test --update-snapshots"
