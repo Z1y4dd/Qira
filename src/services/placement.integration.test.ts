@@ -12,7 +12,9 @@ describe('getPlacementState()', () => {
 
   test.todo("returns 'in_progress' when child has a placement attempt with no finishedAt");
 
-  test.todo("returns 'completed' when child has a placement attempt with finishedAt set and escape_hatched=false");
+  test.todo(
+    "returns 'completed' when child has a placement attempt with finishedAt set and escape_hatched=false",
+  );
 
   test.todo("returns 'escape_hatched' when child has a placement attempt with escape_hatched=true");
 

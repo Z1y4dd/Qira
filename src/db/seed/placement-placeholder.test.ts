@@ -10,7 +10,11 @@ import { describe, test } from 'vitest';
 // import { eq, and, count } from 'drizzle-orm';
 
 describe('placement placeholder bank — seed count assertions', () => {
-  test.todo('texts.isPlaceholder = true count equals 5 (one passage per level band: 2, 6, 10, 14, 18)');
+  test.todo(
+    'texts.isPlaceholder = true count equals 5 (one passage per level band: 2, 6, 10, 14, 18)',
+  );
 
-  test.todo('questions.isPlaceholder = true count equals 15 (3 questions per passage: literal, vocabulary, inferential)');
+  test.todo(
+    'questions.isPlaceholder = true count equals 15 (3 questions per passage: literal, vocabulary, inferential)',
+  );
 });
