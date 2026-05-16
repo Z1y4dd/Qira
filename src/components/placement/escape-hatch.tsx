@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import { useState, useTransition } from 'react';
+import { abortPlacementAction } from '@/app/(authenticated)/placement/actions';
 import { ArabicText } from '@/components/arabic-text';
 import {
   AlertDialog,
@@ -27,17 +28,22 @@ export function EscapeHatch(props: EscapeHatchProps): React.JSX.Element {
   const [openReason, setOpenReason] = useState<'too_hard' | 'too_easy' | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // PLAN-05-ACTION-WIRING: replace this stub with abortPlacementAction({ attemptId, reason }) for mode === 'placement', and shiftLevelAction({ childId, direction }) for mode === 'reader' (Phase 4).
   function handleConfirm() {
-    startTransition(() => {
-      console.warn(
-        '[PLAN-05] escape-hatch action wiring pending — confirmed reason:',
-        openReason,
-        'mode:',
-        props.mode,
-      );
-      setOpenReason(null);
-    });
+    if (!openReason) return;
+    if (props.mode === 'placement') {
+      if (!props.attemptId) return;
+      const reason = openReason;
+      const attemptId = props.attemptId;
+      startTransition(async () => {
+        await abortPlacementAction({ attemptId, reason });
+        setOpenReason(null);
+      });
+      return;
+    }
+    // mode === 'reader' — Phase 4 will wire shiftLevelAction
+    // TODO(Phase 4): call shiftLevelAction({ childId, direction: openReason === 'too_hard' ? 'down' : 'up' })
+    console.warn('reader-mode escape hatch not yet wired');
+    setOpenReason(null);
   }
 
   return (
