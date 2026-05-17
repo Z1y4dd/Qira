@@ -80,7 +80,7 @@ Plans:
   1. A placed child lands on one passage at their assigned level (auto-routed — no library UI yet) and the passage renders in Noto Naskh Arabic at line-height ≥ 1.8, Tashkeel ON for Levels 1–10 / OFF for 11–20 with toggle present at all levels, `<bdi>` correctly handling mixed Arabic+Latin tokens — verified by Playwright visual regression at desktop + mobile in Chromium and WebKit
   2. After finishing the passage the child sees 4–6 hand-authored comprehension questions in randomized order, each multiple-choice with 3–4 choices in randomized order, with the question-type distribution targeted at literal ~30% / vocab ~25–30% / inferential ~25% / prediction-or-evaluative ~15–20%
   3. The child submits a choice via a Server Action; the browser sends only the choice ID and the server returns correctness — devtools inspection of the page bundle reveals zero correct-answer data shipped to the client
-  4. After all questions are answered on a single attempt (no retry in this phase), the child sees a kid-readable result screen with score and a single CTA, and the attempt is persisted in `attempts` + `attempt_answers` with `kind = 'comprehension'`
+  4. After all questions are answered on a single attempt (no retry in this phase), the child sees a kid-readable result screen with score and a single CTA, and the attempt is persisted in `attempts` + `attempt_answers` with `kind = 'reading'`
   5. The seed comprehension bank ships with at least one passage and 4–6 questions at Level 5 (or whichever placement Level the test child sits at), flagged as placeholder pending literacy-specialist sign-off — no retry, no error/loading polish, no library browse (those are explicit Phase 4.1 / 4.2 scope)
 **Plans:** TBD
 **UI hint:** yes
