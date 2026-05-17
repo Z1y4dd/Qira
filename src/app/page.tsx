@@ -1,10 +1,12 @@
 import Link from 'next/link';
 import { ArabicText } from '@/components/arabic-text';
 import { Button } from '@/components/ui/button';
+import { HashAuthHandler } from '@/components/auth/hash-auth-handler';
 
 export default function HomePage() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-8 px-4">
+      <HashAuthHandler />
       <ArabicText as="h1" size="reader" className="text-4xl text-center">
         مرحباً بكم في قِراءة
       </ArabicText>

@@ -28,7 +28,12 @@ export default async function ResetPasswordPage({
     });
     if (error) return <ResetError />;
   } else {
-    return <ResetError />;
+    // No code or token_hash — check if the browser client already established
+    // a recovery session via implicit-flow hash exchange (HashAuthHandler).
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return <ResetError />;
   }
 
   return (
